@@ -52,7 +52,7 @@
             <ul class="nav-right padding-8">
 
                 <li class="">
-                    <a class="pointer">
+                    <a href="/videos/create" class="pointer">
                         <i class="material-icons">video_call</i>
                     </a>
                 </li>
@@ -67,7 +67,7 @@
                     </a>
                 </li>
                 <li class="user-profile">
-                    <a>
+                    <a href="/user/profile">
                         <img class="profile-img img-fluid" src="images/default/eastjun_profile.jpg" alt="">
                     </a>
                 </li>
@@ -164,88 +164,17 @@
                 </div>
 
                 <div class="mrg-top-20">
-                    <h3 class="text-bold height-40px">맞춤 동영상</h3>
+                    <h3 class="text-bold height-40px">최신 동영상</h3>
                 </div>
 
-                <div class="row pdd-horizon-10">
-                    <div class="col-lg-2 padding-2">
-                        <div class="card bg-transparent no-border">
-                            <div class="card-media">
-                                <img class="img-responsive" src="http://img.youtube.com/vi/S8e1geEpnTA/2.jpg" alt="">
-                            </div>
-                            <div class="card-block padding-10">
-                                <h5 class="mrg-btm-10 no-mrg-top text-bold font-size-14 ls-0">[10분 테크토크] 🦊🦆닉&러너덕의 점심봇</h5>
-                                <span class="font-size-13">우아한Tech</span>
-                                <div class="font-size-13">
-                                    <span>조회수 952회</span>
-                                    <span> · </span>
-                                    <span>3일 전</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 padding-2">
-                        <div class="card bg-transparent no-border">
-                            <div class="card-media">
-                                <img class="img-responsive" src="images/default/thumb_002.jpeg" alt="">
-                            </div>
-                            <div class="card-block padding-10">
-                                <h5 class="mrg-btm-10 no-mrg-top text-bold font-size-14 ls-0">[10분 테크토크] 👾베디의 OCP와 전략패턴</h5>
-                                <span>우아한Tech</span>
-                                <span class="d-block">조회수 952회 | 3일 전</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 padding-2">
-                        <div class="card bg-transparent no-border">
-                            <div class="card-media">
-                                <img class="img-responsive" src="images/default/thumb_003.jpeg" alt="">
-                            </div>
-                            <div class="card-block padding-10">
-                                <h5 class="mrg-btm-10 no-mrg-top text-bold font-size-14 ls-0">[10분 테크토크] 🤠루피의 우아한테크코스 도서관리시스템</h5>
-                                <span>우아한Tech</span>
-                                <span class="d-block">조회수 952회 | 3일 전</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 padding-2">
-                        <div class="card bg-transparent no-border">
-                            <div class="card-media">
-                                <img class="img-responsive" src="images/default/thumb_004.jpeg" alt="">
-                            </div>
-                            <div class="card-block padding-10">
-                                <h5 class="mrg-btm-10 no-mrg-top text-bold font-size-14 ls-0">[10분 테크토크] 👩🏻‍💻👨🏻‍💻해리&션의 MVC 패턴</h5>
-                                <span>우아한Tech</span>
-                                <span class="d-block">조회수 952회 | 3일 전</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 padding-2">
-                        <div class="card bg-transparent no-border">
-                            <div class="card-media">
-                                <img class="img-responsive" src="images/default/thumb_005.jpeg" alt="">
-                            </div>
-                            <div class="card-block padding-10">
-                                <h5 class="mrg-btm-10 no-mrg-top text-bold font-size-14 ls-0">[10분 테크토크] 👨🏻‍💻👨🏻‍💻지노&비모의 DTO vs VO</h5>
-                                <span>우아한Tech</span>
-                                <span class="d-block">조회수 952회 | 3일 전</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 padding-2">
-                        <div class="card bg-transparent no-border">
-                            <div class="card-media">
-                                <img class="img-responsive" src="images/default/thumb_006.jpeg" alt="">
-                            </div>
-                            <div class="card-block padding-10">
-                                <h5 class="mrg-btm-10 no-mrg-top text-bold font-size-14 ls-0">[10분 테크토크] 🤦‍♂️🤦‍♂️슬로스&이바의 우리는 왜 실패했는가</h5>
-                                <span>우아한Tech</span>
-                                <span class="d-block">조회수 952회 | 3일 전</span>
-                            </div>
-                        </div>
-                    </div>
-
+                <div id="dateVideoCard"class="row pdd-horizon-10">
                 </div>
+                <div class="mrg-top-20">
+                    <h3 class="text-bold height-40px">인기 동영상</h3>
+                </div>
+
+                <div id="popularVideoCard" class="row pdd-horizon-10"></div>
+                
             </div>
         </div>
     </div>
@@ -264,5 +193,9 @@
         document.querySelector(".app").classList.toggle("is-collapsed")
     }
 </script>
+<script src="js/const.js"></script>
+<script src="js/videocardtemplate.js"></script>
+<script src="js/mainpage.js"></script>
+<script src="js/testdata.js"></script>
 </body>
 </html>

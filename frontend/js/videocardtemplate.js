@@ -1,4 +1,4 @@
-function addVideoCardTemplate(data, number) {
+function addVideoCardTemplate(data, number, kategorie) {
     const vidioCardTemplate = `<div class="col-lg-2 padding-2">
     <div class="card bg-transparent no-border">
     <div class="card-media">
@@ -17,6 +17,6 @@ function addVideoCardTemplate(data, number) {
     </div>
     </div>
     </div>`    
-    const videoCards = document.getElementById("videoCards")
+    const videoCards = document.getElementById(kategorie)
     videoCards.insertAdjacentHTML("beforeend", vidioCardTemplate)
 }
