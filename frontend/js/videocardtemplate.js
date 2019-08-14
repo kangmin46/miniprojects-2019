@@ -1,4 +1,5 @@
-function addVideoCardTemplate(data, number, kategorie) {
+function addVideoCardTemplate(data, number, categorie) {
+    console.log(data)
     const vidioCardTemplate = `<div class="col-lg-2 padding-2">
     <div class="card bg-transparent no-border">
     <div class="card-media">
@@ -17,6 +18,14 @@ function addVideoCardTemplate(data, number, kategorie) {
     </div>
     </div>
     </div>`    
-    const videoCards = document.getElementById(kategorie)
+    const videoCards = document.getElementById(categorie)
     videoCards.insertAdjacentHTML("beforeend", vidioCardTemplate)
+}
+
+function addVideoCardTemplates(data, categorie) {
+    console.log(data);
+    console.log("addVideoCardTemplates 실행!!")
+    for(let i =0; i < 6; i++) {
+        addVideoCardTemplate(data, i, categorie)
+    }
 }
