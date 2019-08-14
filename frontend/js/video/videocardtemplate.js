@@ -1,9 +1,8 @@
 function addVideoCardTemplate(data, number, categorie) {
-    console.log(data)
     const vidioCardTemplate = `<div class="col-lg-2 padding-2">
     <div class="card bg-transparent no-border">
     <div class="card-media">
-    <a href="/videos/${number+1}"> 
+    <a href="detail.html?id=${number+1}"> 
     <img class="img-responsive" src="http://img.youtube.com/vi/${data[number].youtubeId}/0.jpg" alt="">
     </a>
     </div>
@@ -23,8 +22,6 @@ function addVideoCardTemplate(data, number, categorie) {
 }
 
 function addVideoCardTemplates(data, categorie) {
-    console.log(data);
-    console.log("addVideoCardTemplates 실행!!")
     for(let i =0; i < 6; i++) {
         addVideoCardTemplate(data, i, categorie)
     }
