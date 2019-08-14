@@ -19,7 +19,7 @@ const api= {
             body : data
         })
     },
-    delete: function(url) {
+    videoDelete: function(url) {
         return fetch(url,{
             method: "DELETE",
             headers: header,
