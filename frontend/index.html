@@ -37,7 +37,7 @@
 </head>
 <body>
 <div class="app">
-        <div include-html="header.html"></div>
+        <div class="header"></div>
     <div class="side-nav mrg-top-60">
         <div class="side-nav-inner">
             <ul class="side-nav-menu overflow-y-auto">
@@ -162,8 +162,10 @@
 <script src="./js/fetchapi.js"></script>
 <script src="./js/video/testdata.js"></script>
 <script src="./js/mainpage.js"></script>
-<script src="js/includeHTML.js"></script>
-<script>includeHTML();</script>
+<script src="./js/headerTemplate.js"></script>
+<script>
+addHeader(document.querySelector(".header"))
+</script>
 
 </body>
 </html>
