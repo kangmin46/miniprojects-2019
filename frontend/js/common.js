@@ -32,7 +32,7 @@ const Api = function () {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
     }
-    const localhostUrl = `http://localhost:8080`
+    const baseUrl = '/api/v1'
     const request = (url, method, body) => {
         return fetch(url, {
             method: method,
@@ -41,23 +41,23 @@ const Api = function () {
         })
     }
 
-    const nobodyRequest = (url, method) => {
+    const requestWithoutBody = (url, method) => {
         return fetch(url, {
             method: method,
             headers: defaultHeader,
         })
     }
     
-    const requestVideos = () => {
-        return nobodyRequest("/v1/videos?filter=date&page=0&limit=6",'GET')
+    const requestVideos = (filter) => {
+        return requestWithoutBody(`${baseUrl}/videos?filter=${filter}&page=0&limit=6`,'GET')
     }
 
     const requestVideo = (videoId) => {
-        return nobodyRequest(`/v1/videos/${videoId}`,'GET')
+        return requestWithoutBody(`${baseUrl}/videos/${videoId}`,'GET')
     }
 
     const saveVideo = (dataBody) => {
-        return request("/v1/videos", 'POST', dataBody)
+        return request(`${baseUrl}/videos`, 'POST', dataBody)
     }
 
     return {
