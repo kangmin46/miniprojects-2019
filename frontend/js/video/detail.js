@@ -1,19 +1,18 @@
 const detailView = function() {
-    params = getUrlParams();
+    params = wootubeCtx.util.getUrlParams();
 
     const videoId = params.id;
-    console.log("videoId : " + videoId);
-    
-    api.get(`api/v1/videos/${videoId}`)
+    console.log('videoId : ' + videoId);
+    api.requestVideo(videoId)
     .then(response => response.json())
     .then(data => detailVideo(data))
 }
 
 const detailVideo = function(data) {
     if (data.result) {
-        alert("해당 동영상이 없습니다.");
+        alert('해당 동영상이 없습니다.');
         return false;
-        // location.href = "/index.html";
+        // location.href = '/index.html';
     }
     addVideoDetailTemplate(data)
 }
