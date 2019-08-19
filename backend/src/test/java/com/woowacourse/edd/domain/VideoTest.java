@@ -22,48 +22,48 @@ public class VideoTest {
     }
 
     @Test
-    void check_youtubeId_empty() {
+    void youtubeId_empty() {
         assertThrows(InvalidYoutubeIdException.class, () -> new Video(EMPTY, VALID_TITLE, VALID_CONTENTS));
     }
 
     @Test
-    void check_youtubeId__null() {
+    void youtubeId__null() {
         assertThrows(InvalidYoutubeIdException.class, () -> new Video(null, VALID_TITLE, VALID_CONTENTS));
     }
 
     @Test
-    void check_youtubeId__blank() {
-        assertThrows(InvalidYoutubeIdException.class, () -> new Video(" ", VALID_TITLE, VALID_CONTENTS));
+    void youtubeId__blank() {
+        assertThrows(InvalidYoutubeIdException.class, () -> new Video(BLANK, VALID_TITLE, VALID_CONTENTS));
     }
 
     @Test
-    void check_title_empty() {
+    void title_empty() {
         assertThrows(InvalidTitleException.class, () -> new Video(VALID_YOUTUBE_ID, EMPTY, VALID_CONTENTS));
     }
 
     @Test
-    void check_title_null() {
+    void title_null() {
         assertThrows(InvalidTitleException.class, () -> new Video(VALID_YOUTUBE_ID, null, VALID_CONTENTS));
     }
 
     @Test
-    void check_title_blank() {
-        assertThrows(InvalidTitleException.class, () -> new Video(VALID_YOUTUBE_ID, " ", VALID_CONTENTS));
+    void title_blank() {
+        assertThrows(InvalidTitleException.class, () -> new Video(VALID_YOUTUBE_ID, BLANK, VALID_CONTENTS));
     }
 
     @Test
-    void check_contents_empty() {
+    void contents_empty() {
         assertThrows(InvalidContentsException.class, () -> new Video(VALID_YOUTUBE_ID, VALID_TITLE, EMPTY));
     }
 
     @Test
-    void check_contents_null() {
+    void contents_null() {
         assertThrows(InvalidContentsException.class, () -> new Video(VALID_YOUTUBE_ID, VALID_TITLE, null));
     }
 
     @Test
-    void check_contents_blank() {
-        assertThrows(InvalidContentsException.class, () -> new Video(VALID_YOUTUBE_ID, VALID_TITLE, " "));
+    void contents_blank() {
+        assertThrows(InvalidContentsException.class, () -> new Video(VALID_YOUTUBE_ID, VALID_TITLE, BLANK));
     }
 
 
