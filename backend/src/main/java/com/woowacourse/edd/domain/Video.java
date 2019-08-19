@@ -26,7 +26,7 @@ public class Video {
     @Column(nullable = false)
     private String contents;
 
-    @CreationTimestamp()
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createDate;
 
