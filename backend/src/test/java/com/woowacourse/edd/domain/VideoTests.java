@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class VideoTest {
+public class VideoTests {
 
     private static final String VALID_YOUTUBE_ID = "abc";
     private static final String VALID_TITLE = "abcd";

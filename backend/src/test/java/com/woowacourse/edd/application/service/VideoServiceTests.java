@@ -20,7 +20,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class VideoServiceTest {
+class VideoServiceTests {
 
     private static final Long DEFAULT_VIDEO_ID = 100L;
     private static final LocalDateTime DEFAULT_VIDEO_CREATE_DATE = LocalDateTime.of(2019, 7, 5, 15, 20);
