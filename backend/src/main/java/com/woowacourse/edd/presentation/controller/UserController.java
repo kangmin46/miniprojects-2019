@@ -27,7 +27,7 @@ public class UserController {
     public ResponseEntity<UserResponse> retrieveUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findbyId(id));
     }
-    
+
     @PostMapping
     public ResponseEntity saveUser(@Valid @RequestBody UserRequestDto userSaveRequestDto) {
         return ResponseEntity.created(URI.create(USER_URL + "/" + userService.save(userSaveRequestDto))).build();

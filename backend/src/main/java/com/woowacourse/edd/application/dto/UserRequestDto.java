@@ -8,7 +8,7 @@ public class UserRequestDto {
     private String name;
     @Email
     private String email;
-    @Pattern(regexp = "[a-zA-Z0-9!@#$%^&*(),.?\\\":{}|<>]{8,}", message = "안됨")
+    @Pattern(regexp = "[a-zA-Z0-9!@#$%^&*(),.?\\\":{}|<>]{8,}", message = "비밀번호는 8자이상의 영문 대,소문자, 특수문자의 조합이여야 합니다.")
     private String password;
 
     private UserRequestDto() {
