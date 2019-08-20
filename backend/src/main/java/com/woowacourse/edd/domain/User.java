@@ -42,14 +42,18 @@ public class User {
         this.isDeleted = isDeleted;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void update(UserRequestDto userRequestDto) {
         this.name = userRequestDto.getName();
         this.email = userRequestDto.getEmail();
         this.password = userRequestDto.getPassword();
+    }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -66,9 +70,5 @@ public class User {
 
     public Boolean isDeleted() {
         return isDeleted;
-    }
-
-    public void delete() {
-        this.isDeleted = true;
     }
 }

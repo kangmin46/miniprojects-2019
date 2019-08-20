@@ -1,9 +1,9 @@
 package com.woowacourse.edd.application.response;
 
 public class UserResponse {
-    private Long id;
-    private String name;
-    private String email;
+    private final Long id;
+    private final String name;
+    private final String email;
 
     public UserResponse(Long id, String name, String email) {
         this.id = id;

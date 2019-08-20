@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final UserConverter userConverter = new UserConverter();
 
     @Autowired

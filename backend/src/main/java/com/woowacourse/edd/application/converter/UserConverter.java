@@ -5,6 +5,7 @@ import com.woowacourse.edd.application.response.UserResponse;
 import com.woowacourse.edd.domain.User;
 
 public class UserConverter {
+
     private static final Boolean IS_DELETED = false;
 
     public User toSaveEntity(UserRequestDto userSaveRequestDto) {
