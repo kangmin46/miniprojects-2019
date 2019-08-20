@@ -1,7 +1,6 @@
 package com.woowacourse.edd.application.converter;
 
 import com.woowacourse.edd.application.dto.UserRequestDto;
-import com.woowacourse.edd.application.response.RedirectResponse;
 import com.woowacourse.edd.application.response.UserResponse;
 import com.woowacourse.edd.domain.User;
 

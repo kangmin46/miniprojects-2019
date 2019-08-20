@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 
+import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
+
 @RestController
-@RequestMapping("/v1/users")
+@RequestMapping(USER_URL)
 public class UserController {
+    public static final String USER_URL = "/v1/users";
     private UserService userService;
 
     @Autowired
@@ -24,11 +27,10 @@ public class UserController {
     public ResponseEntity<UserResponse> retrieveUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findbyId(id));
     }
-
-
+    
     @PostMapping
     public ResponseEntity saveUser(@Valid @RequestBody UserRequestDto userSaveRequestDto) {
-        return ResponseEntity.created(URI.create("/v1/users/" + userService.save(userSaveRequestDto))).build();
+        return ResponseEntity.created(URI.create(USER_URL + "/" + userService.save(userSaveRequestDto))).build();
     }
 
     @PutMapping("/{id}")
@@ -41,6 +43,4 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-
 }

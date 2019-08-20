@@ -8,6 +8,8 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
+
 public class UserControllerTests extends EddApplicationTests {
     @Autowired
     private WebTestClient webTestClient;
@@ -16,12 +18,12 @@ public class UserControllerTests extends EddApplicationTests {
     void user_save() {
         UserRequestDto userSaveRequestDto = new UserRequestDto("robby", "shit@email.com", "P@ssW0rd");
         EntityExchangeResult<byte[]> result = webTestClient.post()
-                .uri("/v1/users")
+                .uri(USER_URL)
                 .body(Mono.just(userSaveRequestDto), UserRequestDto.class)
                 .exchange()
                 .expectStatus()
                 .isCreated()
-                .expectHeader().valueMatches("Location", "/v1/users/\\d")
+                .expectHeader().valueMatches("Location", USER_URL + "/\\d")
                 .expectBody()
                 .returnResult();
 
@@ -38,10 +40,10 @@ public class UserControllerTests extends EddApplicationTests {
 
     @Test
     void user_update() {
-        UserRequestDto userRequestDto = new UserRequestDto( "jm", "hansome@gmail.com", "P!ssW0rd");
+        UserRequestDto userRequestDto = new UserRequestDto("jm", "hansome@gmail.com", "P!ssW0rd");
 
         webTestClient.put()
-                .uri("/v1/users/1")
+                .uri(USER_URL + "/1")
                 .body(Mono.just(userRequestDto), UserRequestDto.class)
                 .exchange()
                 .expectStatus()
@@ -54,7 +56,7 @@ public class UserControllerTests extends EddApplicationTests {
     @Test
     void user_delete_not_found() {
         webTestClient.delete()
-                .uri("/v1/users/999")
+                .uri(USER_URL + "/999")
                 .exchange()
                 .expectStatus()
                 .isNotFound();  //404
@@ -63,7 +65,7 @@ public class UserControllerTests extends EddApplicationTests {
     @Test
     void user_delete_no_content() {
         webTestClient.delete()
-                .uri("/v1/users/1")
+                .uri(USER_URL + "/1")
                 .exchange()
                 .expectStatus()
                 .isNoContent();
@@ -75,12 +77,12 @@ public class UserControllerTests extends EddApplicationTests {
 
         EntityExchangeResult<byte[]> result = webTestClient
                 .post()
-                .uri("/v1/users")
+                .uri(USER_URL)
                 .body(Mono.just(userRequestDto), UserRequestDto.class)
                 .exchange()
                 .expectStatus()
                 .isCreated()
-                .expectHeader().valueMatches("Location", "/v1/users/\\d")
+                .expectHeader().valueMatches("Location", USER_URL + "/\\d")
                 .expectBody()
                 .returnResult();
 
