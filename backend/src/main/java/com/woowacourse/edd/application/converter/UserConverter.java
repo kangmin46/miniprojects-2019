@@ -1,20 +1,27 @@
 package com.woowacourse.edd.application.converter;
 
 import com.woowacourse.edd.application.dto.UserSaveRequestDto;
-import com.woowacourse.edd.application.dto.VideoSaveRequestDto;
+import com.woowacourse.edd.application.dto.UserUpdateRequestDto;
 import com.woowacourse.edd.application.response.RedirectResponse;
-import com.woowacourse.edd.application.response.VideoResponse;
+import com.woowacourse.edd.application.response.UserUpdateResponse;
 import com.woowacourse.edd.domain.User;
-import com.woowacourse.edd.domain.Video;
-
-import java.time.format.DateTimeFormatter;
 
 public class UserConverter {
-    public User toEntity(UserSaveRequestDto userSaveRequestDto) {
-        return new User(userSaveRequestDto.getName(), userSaveRequestDto.getEmail(), userSaveRequestDto.getPassword());
+    private static final Boolean IS_DELETED = false;
+
+    public User toSaveEntity(UserSaveRequestDto userSaveRequestDto) {
+        return new User(userSaveRequestDto.getName(), userSaveRequestDto.getEmail(), userSaveRequestDto.getPassword(), IS_DELETED);
     }
 
-    public RedirectResponse toResponse(Long userId) {
+    public User toUpdateEntity(UserUpdateRequestDto userUpdateRequestDto) {
+        return new User(userUpdateRequestDto.getName(), userUpdateRequestDto.getEmail(), userUpdateRequestDto.getPassword(), IS_DELETED);
+    }
+
+    public RedirectResponse toSaveResponse(Long userId) {
         return new RedirectResponse("/", userId);
+    }
+
+    public UserUpdateResponse toUpdateResponse(User user) {
+        return new UserUpdateResponse(user.getId(), user.getName(), user.getEmail(), user.getPassword());
     }
 }
