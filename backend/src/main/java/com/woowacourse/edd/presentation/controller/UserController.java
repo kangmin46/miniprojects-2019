@@ -1,15 +1,14 @@
 package com.woowacourse.edd.presentation.controller;
 
-import com.woowacourse.edd.application.dto.UserSaveRequestDto;
-import com.woowacourse.edd.application.dto.UserUpdateRequestDto;
-import com.woowacourse.edd.application.response.RedirectResponse;
-import com.woowacourse.edd.application.response.UserUpdateResponse;
+import com.woowacourse.edd.application.dto.UserRequestDto;
+import com.woowacourse.edd.application.response.UserResponse;
 import com.woowacourse.edd.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -21,14 +20,20 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<RedirectResponse> saveUser(@Valid @RequestBody UserSaveRequestDto userSaveRequestDto) {
-        return ResponseEntity.ok(userService.save(userSaveRequestDto));
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> retrieveUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findbyId(id));
     }
 
-    @PutMapping
-    public ResponseEntity<UserUpdateResponse> updateUser(@Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
-        return ResponseEntity.ok(userService.update(userUpdateRequestDto));
+
+    @PostMapping
+    public ResponseEntity saveUser(@Valid @RequestBody UserRequestDto userSaveRequestDto) {
+        return ResponseEntity.created(URI.create("/v1/users/" + userService.save(userSaveRequestDto))).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(@Valid @RequestBody UserRequestDto userRequestDto, @PathVariable Long id) {
+        return ResponseEntity.ok(userService.update(userRequestDto, id));
     }
 
     @DeleteMapping("/{id}")
@@ -36,5 +41,6 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 
 }

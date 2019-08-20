@@ -1,10 +1,8 @@
 package com.woowacourse.edd.application.service;
 
 import com.woowacourse.edd.application.converter.UserConverter;
-import com.woowacourse.edd.application.dto.UserSaveRequestDto;
-import com.woowacourse.edd.application.dto.UserUpdateRequestDto;
-import com.woowacourse.edd.application.response.RedirectResponse;
-import com.woowacourse.edd.application.response.UserUpdateResponse;
+import com.woowacourse.edd.application.dto.UserRequestDto;
+import com.woowacourse.edd.application.response.UserResponse;
 import com.woowacourse.edd.domain.User;
 import com.woowacourse.edd.exceptions.UserNotFoundException;
 import com.woowacourse.edd.repository.UserRepository;
@@ -23,20 +21,31 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public RedirectResponse save(UserSaveRequestDto userSaveRequestDto) {
+    public Long save(UserRequestDto userSaveRequestDto) {
         User user = userConverter.toSaveEntity(userSaveRequestDto);
-        return userConverter.toSaveResponse(userRepository.save(user).getId());
+        user = userRepository.save(user);
+        return user.getId();
     }
 
-    public UserUpdateResponse update(UserUpdateRequestDto userUpdateRequestDto) {
-        User user = userRepository.findById(userUpdateRequestDto.getId()).orElseThrow(UserNotFoundException::new);
-        user.update(userUpdateRequestDto);
-        return userConverter.toUpdateResponse(user);
+    public UserResponse update(UserRequestDto userRequestDto, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        user.update(userRequestDto);
+        return userConverter.toResponse(user);
 
     }
 
     public void delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        if (user.isDeleted()) {
+            throw new UserNotFoundException();
+        }
         user.delete();
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse findbyId(Long id) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+
+        return userConverter.toResponse(user);
     }
 }
