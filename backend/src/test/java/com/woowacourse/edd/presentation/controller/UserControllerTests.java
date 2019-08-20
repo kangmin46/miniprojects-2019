@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
 
 public class UserControllerTests extends EddApplicationTests {
+
     @Autowired
     private WebTestClient webTestClient;
 

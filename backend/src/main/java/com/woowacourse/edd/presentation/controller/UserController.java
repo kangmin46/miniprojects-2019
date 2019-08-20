@@ -15,7 +15,9 @@ import static com.woowacourse.edd.presentation.controller.UserController.USER_UR
 @RestController
 @RequestMapping(USER_URL)
 public class UserController {
+
     public static final String USER_URL = "/v1/users";
+
     private UserService userService;
 
     @Autowired

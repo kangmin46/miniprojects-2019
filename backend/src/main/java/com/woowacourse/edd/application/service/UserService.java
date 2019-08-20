@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class UserService {
+
     private final UserRepository userRepository;
+
     private final UserConverter userConverter = new UserConverter();
 
     @Autowired
@@ -31,7 +33,6 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.update(userRequestDto);
         return userConverter.toResponse(user);
-
     }
 
     public void delete(Long id) {
@@ -45,7 +46,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse findbyId(Long id) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-
         return userConverter.toResponse(user);
     }
 }
