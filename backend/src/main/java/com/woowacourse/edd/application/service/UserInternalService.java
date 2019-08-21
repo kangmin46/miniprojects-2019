@@ -25,7 +25,8 @@ class UserInternalService {
 
     @Transactional(readOnly = true)
     public User findById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return userRepository.findById(userId)
+            .orElseThrow(UserNotFoundException::new);
     }
 
     public User update(Long id, UserRequestDto userRequestDto) {
@@ -43,6 +44,8 @@ class UserInternalService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        return userRepository.findByEmail(email)
+            .filter(user -> !user.isDeleted())
+            .orElseThrow(UserNotFoundException::new);
     }
 }

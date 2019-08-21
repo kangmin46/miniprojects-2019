@@ -1,7 +1,9 @@
 package com.woowacourse.edd.presentation.controller;
 
 import com.woowacourse.edd.application.dto.LoginRequestDto;
+import com.woowacourse.edd.application.dto.UserRequestDto;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import reactor.core.publisher.Mono;
 
@@ -31,6 +33,21 @@ public class LoginControllerTests extends BasicControllerTests {
         LoginRequestDto loginRequestDto = new LoginRequestDto(DEFAULT_LOGIN_EMAIL + "conas", DEFAULT_LOGIN_PASSWORD);
         assertFailNotFound(requestLogin(loginRequestDto), USER_NOT_FOUND_MESSAGE);
     }
+
+    @Test
+    void login_unavailable_user() {
+        String testEmail = "edan@gmail.com";
+        String testPassword = "passW0rd";
+
+        UserRequestDto userRequestDto = new UserRequestDto("edan", testEmail, testPassword);
+        String url = signUp(userRequestDto).getResponseHeaders().getLocation().toASCIIString();
+
+        webTestClient.delete().uri(url).exchange().expectStatus().isNoContent();
+
+        LoginRequestDto loginRequestDto = new LoginRequestDto(testEmail, testPassword);
+        assertFailNotFound(requestLogin(loginRequestDto), USER_NOT_FOUND_MESSAGE);
+    }
+
 
     private StatusAssertions requestLogin(LoginRequestDto loginRequestDto) {
         return executePost(LOGIN_URL).body(Mono.just(loginRequestDto), LoginRequestDto.class)

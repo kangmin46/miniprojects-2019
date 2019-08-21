@@ -1,10 +1,15 @@
 package com.woowacourse.edd.presentation.controller;
 
+import com.woowacourse.edd.application.dto.UserRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
+
+import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -48,5 +53,17 @@ public class BasicControllerTests {
 
     protected WebTestClient.RequestHeadersSpec executeDelete(String uri) {
         return webTestClient.delete().uri(uri);
+    }
+
+    protected EntityExchangeResult<byte[]> signUp(UserRequestDto userSaveRequestDto) {
+        return webTestClient.post()
+            .uri(USER_URL)
+            .body(Mono.just(userSaveRequestDto), UserRequestDto.class)
+            .exchange()
+            .expectStatus()
+            .isCreated()
+            .expectHeader().valueMatches("Location", USER_URL + "/\\d")
+            .expectBody()
+            .returnResult();
     }
 }

@@ -12,15 +12,7 @@ public class UserControllerTests extends BasicControllerTests {
     @Test
     void user_save() {
         UserRequestDto userSaveRequestDto = new UserRequestDto("robby", "shit@email.com", "P@ssW0rd");
-        EntityExchangeResult<byte[]> result = webTestClient.post()
-            .uri(USER_URL)
-            .body(Mono.just(userSaveRequestDto), UserRequestDto.class)
-            .exchange()
-            .expectStatus()
-            .isCreated()
-            .expectHeader().valueMatches("Location", USER_URL + "/\\d")
-            .expectBody()
-            .returnResult();
+        EntityExchangeResult<byte[]> result = signUp(userSaveRequestDto);
 
         webTestClient
             .get()
@@ -38,15 +30,7 @@ public class UserControllerTests extends BasicControllerTests {
         UserRequestDto userSaveRequestDto = new UserRequestDto("robby", "shit123@email.com", "P@ssW0rd");
         UserRequestDto userRequestDto = new UserRequestDto("jm", "hansome@gmail.com", "P!ssW0rd");
 
-        EntityExchangeResult<byte[]> result = webTestClient.post()
-            .uri(USER_URL)
-            .body(Mono.just(userSaveRequestDto), UserRequestDto.class)
-            .exchange()
-            .expectStatus()
-            .isCreated()
-            .expectHeader().valueMatches("Location", USER_URL + "/\\d")
-            .expectBody()
-            .returnResult();
+        EntityExchangeResult<byte[]> result = signUp(userSaveRequestDto);
 
         String uri = result.getResponseHeaders().getLocation().toASCIIString();
 
@@ -73,15 +57,7 @@ public class UserControllerTests extends BasicControllerTests {
     @Test
     void user_delete_no_content() {
         UserRequestDto userSaveRequestDto = new UserRequestDto("robby", "shit222@email.com", "P@ssW0rd");
-        EntityExchangeResult<byte[]> result = webTestClient.post()
-            .uri(USER_URL)
-            .body(Mono.just(userSaveRequestDto), UserRequestDto.class)
-            .exchange()
-            .expectStatus()
-            .isCreated()
-            .expectHeader().valueMatches("Location", USER_URL + "/\\d")
-            .expectBody()
-            .returnResult();
+        EntityExchangeResult<byte[]> result = signUp(userSaveRequestDto);
         String[] locationTokens = result.getResponseHeaders().getLocation().toASCIIString().split("/");
         String userId = locationTokens[locationTokens.length - 1];
         webTestClient.delete()
@@ -95,16 +71,7 @@ public class UserControllerTests extends BasicControllerTests {
     void user_delete_when_already_deleted() {
         UserRequestDto userRequestDto = new UserRequestDto("conas", "conas@email.com", "P@ssW0rd");
 
-        EntityExchangeResult<byte[]> result = webTestClient
-            .post()
-            .uri(USER_URL)
-            .body(Mono.just(userRequestDto), UserRequestDto.class)
-            .exchange()
-            .expectStatus()
-            .isCreated()
-            .expectHeader().valueMatches("Location", USER_URL + "/\\d")
-            .expectBody()
-            .returnResult();
+        EntityExchangeResult<byte[]> result = signUp(userRequestDto);
 
         String url = result.getResponseHeaders().getLocation().toASCIIString();
         webTestClient.delete()

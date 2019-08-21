@@ -34,7 +34,8 @@ class VideoInternalService {
 
     @Transactional(readOnly = true)
     public Video findById(long id) {
-        return videoRepository.findById(id).orElseThrow(VideoNotFoundException::new);
+        return videoRepository.findById(id)
+            .orElseThrow(VideoNotFoundException::new);
     }
 
     public Video update(Long id, VideoUpdateRequestDto requestDto) {
