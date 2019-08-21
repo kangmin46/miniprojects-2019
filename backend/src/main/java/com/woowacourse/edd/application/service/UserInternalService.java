@@ -30,7 +30,7 @@ class UserInternalService {
         return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 
-    public User update(UserRequestDto userRequestDto, Long id) {
+    public User update(Long id, UserRequestDto userRequestDto) {
         User user = findById(id);
         user.update(userRequestDto.getName(), userRequestDto.getEmail(), userRequestDto.getPassword());
         return user;

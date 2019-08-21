@@ -25,8 +25,8 @@ public class UserService {
         return user.getId();
     }
 
-    public UserResponse update(UserRequestDto userRequestDto, Long userId) {
-        User user = userInternalService.update(userRequestDto,userId);
+    public UserResponse update(Long userId, UserRequestDto userRequestDto) {
+        User user = userInternalService.update(userId, userRequestDto);
         return userConverter.toResponse(user);
     }
 
