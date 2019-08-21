@@ -1,19 +1,13 @@
 package com.woowacourse.edd.presentation.controller;
 
-import com.woowacourse.edd.EddApplicationTests;
 import com.woowacourse.edd.application.dto.UserRequestDto;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
 
-public class UserControllerTests extends EddApplicationTests {
-
-    @Autowired
-    private WebTestClient webTestClient;
+public class UserControllerTests extends BasicControllerTests {
 
     @Test
     void user_save() {
