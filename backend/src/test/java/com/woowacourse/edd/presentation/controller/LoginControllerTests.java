@@ -3,7 +3,6 @@ package com.woowacourse.edd.presentation.controller;
 import com.woowacourse.edd.application.dto.LoginRequestDto;
 import com.woowacourse.edd.application.dto.UserRequestDto;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import reactor.core.publisher.Mono;
 
@@ -47,7 +46,6 @@ public class LoginControllerTests extends BasicControllerTests {
         LoginRequestDto loginRequestDto = new LoginRequestDto(testEmail, testPassword);
         assertFailNotFound(requestLogin(loginRequestDto), USER_NOT_FOUND_MESSAGE);
     }
-
 
     private StatusAssertions requestLogin(LoginRequestDto loginRequestDto) {
         return executePost(LOGIN_URL).body(Mono.just(loginRequestDto), LoginRequestDto.class)
