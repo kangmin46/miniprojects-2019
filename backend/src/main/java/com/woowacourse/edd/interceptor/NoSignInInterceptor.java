@@ -19,11 +19,15 @@ public class NoSignInInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        if (isSignedIn(request) && isVideosURI(request) && allowedMethodsToVideos.contains(request.getMethod())) {
+        if (isSignedIn(request) &&
+            isVideosURI(request) &&
+            allowedMethodsToVideos.contains(request.getMethod())) {
             return true;
         }
 
-        if (isSignedIn(request) && isUsersURI(request) && allowedMethodsToUsers.contains(request.getMethod())) {
+        if (isSignedIn(request) &&
+            isUsersURI(request) &&
+            allowedMethodsToUsers.contains(request.getMethod())) {
             return true;
         }
 
