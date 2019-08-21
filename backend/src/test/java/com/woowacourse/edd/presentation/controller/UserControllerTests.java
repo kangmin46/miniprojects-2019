@@ -35,10 +35,23 @@ public class UserControllerTests extends BasicControllerTests {
 
     @Test
     void user_update() {
+        UserRequestDto userSaveRequestDto = new UserRequestDto("robby", "shit123@email.com", "P@ssW0rd");
         UserRequestDto userRequestDto = new UserRequestDto("jm", "hansome@gmail.com", "P!ssW0rd");
 
+        EntityExchangeResult<byte[]> result = webTestClient.post()
+            .uri(USER_URL)
+            .body(Mono.just(userSaveRequestDto), UserRequestDto.class)
+            .exchange()
+            .expectStatus()
+            .isCreated()
+            .expectHeader().valueMatches("Location", USER_URL + "/\\d")
+            .expectBody()
+            .returnResult();
+
+        String uri = result.getResponseHeaders().getLocation().toASCIIString();
+
         webTestClient.put()
-            .uri(USER_URL + "/1")
+            .uri(uri)
             .body(Mono.just(userRequestDto), UserRequestDto.class)
             .exchange()
             .expectStatus()
@@ -59,8 +72,20 @@ public class UserControllerTests extends BasicControllerTests {
 
     @Test
     void user_delete_no_content() {
+        UserRequestDto userSaveRequestDto = new UserRequestDto("robby", "shit222@email.com", "P@ssW0rd");
+        EntityExchangeResult<byte[]> result = webTestClient.post()
+            .uri(USER_URL)
+            .body(Mono.just(userSaveRequestDto), UserRequestDto.class)
+            .exchange()
+            .expectStatus()
+            .isCreated()
+            .expectHeader().valueMatches("Location", USER_URL + "/\\d")
+            .expectBody()
+            .returnResult();
+        String[] locationTokens = result.getResponseHeaders().getLocation().toASCIIString().split("/");
+        String userId = locationTokens[locationTokens.length - 1];
         webTestClient.delete()
-            .uri(USER_URL + "/1")
+            .uri(USER_URL + "/" + userId)
             .exchange()
             .expectStatus()
             .isNoContent();
@@ -93,5 +118,12 @@ public class UserControllerTests extends BasicControllerTests {
             .exchange()
             .expectStatus()
             .isNotFound();
+    }
+
+    @Test
+    void find_by_id() {
+        webTestClient.get().uri(USER_URL + "/1")
+            .exchange()
+            .expectStatus().isOk();
     }
 }
