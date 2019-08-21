@@ -43,4 +43,13 @@ public class LoginControllerTests extends BasicControllerTests {
         LoginRequestDto loginRequestDto = new LoginRequestDto(testEmail, testPassword);
         assertFailNotFound(requestLogin(loginRequestDto), USER_NOT_FOUND_MESSAGE);
     }
+
+    @Test
+    void logout() {
+        String cookie = getLoginCookie(new LoginRequestDto(DEFAULT_LOGIN_EMAIL, DEFAULT_LOGIN_PASSWORD));
+
+        executePost("/v1/logout").cookie("JSESSIONID", cookie)
+            .exchange()
+            .expectStatus().isOk();
+    }
 }
