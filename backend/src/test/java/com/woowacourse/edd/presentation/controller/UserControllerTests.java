@@ -58,10 +58,9 @@ public class UserControllerTests extends BasicControllerTests {
     void user_delete_no_content() {
         UserRequestDto userSaveRequestDto = new UserRequestDto("robby", "shit222@email.com", "P@ssW0rd");
         EntityExchangeResult<byte[]> result = signUp(userSaveRequestDto);
-        String[] locationTokens = result.getResponseHeaders().getLocation().toASCIIString().split("/");
-        String userId = locationTokens[locationTokens.length - 1];
+        String url = result.getResponseHeaders().getLocation().toASCIIString();
         webTestClient.delete()
-            .uri(USER_URL + "/" + userId)
+            .uri(url)
             .exchange()
             .expectStatus()
             .isNoContent();

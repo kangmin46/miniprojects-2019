@@ -18,7 +18,6 @@ class LoginInternalService {
         this.userInternalService = userInternalService;
     }
 
-
     public User authenticate(LoginRequestDto loginRequestDto) {
         User user = userInternalService.findByEmail(loginRequestDto.getEmail());
         if (user.isNotMatchPassword(loginRequestDto.getPassword())) {
