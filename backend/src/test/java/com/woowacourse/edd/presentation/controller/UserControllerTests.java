@@ -12,14 +12,6 @@ import reactor.core.publisher.Mono;
 import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
 
 public class UserControllerTests extends BasicControllerTests {
-    private String sid;
-
-    @BeforeEach
-    void setUp() {
-        LoginRequestDto loginRequestDto = new LoginRequestDto("kangmin789@naver.com", "P@ssW0rd");
-
-        sid = getLoginCookie(loginRequestDto);
-    }
 
     @Test
     void user_save() {
@@ -60,21 +52,21 @@ public class UserControllerTests extends BasicControllerTests {
         LoginRequestDto loginRequestDto = new LoginRequestDto("conas@naver.com", "p@ssW0rd");
         String sid = getLoginCookie(loginRequestDto);
 
-        updateUser(unauthorizedUpdateRequest, url, sid).isUnauthorized();
+        updateUser(unauthorizedUpdateRequest, url, sid).isForbidden();
     }
 
     @Test
     @DisplayName("가입되지 않은 유저가 가입되지 않은 유저 삭제를 시도할 때")
     void no_signin_delete_no_signin_user() {
         deleteUser(USER_URL + "/999", null)
-            .isUnauthorized();  //404
+            .isUnauthorized();
     }
 
     @Test
     @DisplayName("가입되지 않은 유저가 가입된 유저 삭제를 시도할 때")
     void no_sigin_delete_user() {
         deleteUser(USER_URL + "/1", null)
-            .isUnauthorized();  //404
+            .isUnauthorized();
     }
 
     @Test
@@ -99,7 +91,7 @@ public class UserControllerTests extends BasicControllerTests {
 
         String sid = getLoginCookie(loginRequestDto);
         deleteUser(authorizedUserUrl, sid)
-            .isUnauthorized();
+            .isForbidden();
     }
 
     @Test

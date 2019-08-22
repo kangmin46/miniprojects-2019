@@ -7,6 +7,6 @@ public class UnauthorizedAccessException extends ErrorResponseException {
     public static final String UNAUTHORIZED_ACCESS_MESSAGE = "권한이 없습니다.";
 
     public UnauthorizedAccessException() {
-        super(UNAUTHORIZED_ACCESS_MESSAGE, HttpStatus.UNAUTHORIZED);
+        super(UNAUTHORIZED_ACCESS_MESSAGE, HttpStatus.FORBIDDEN);
     }
 }
