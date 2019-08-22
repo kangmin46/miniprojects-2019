@@ -3,6 +3,7 @@ package com.woowacourse.edd.presentation.controller;
 import com.woowacourse.edd.application.dto.LoginRequestDto;
 import com.woowacourse.edd.application.dto.UserRequestDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
@@ -34,9 +35,13 @@ public class UserControllerTests extends BasicControllerTests {
     @Test
     void user_update() {
         UserRequestDto userSaveRequestDto = new UserRequestDto("robby", "shit123@email.com", "P@ssW0rd");
+        LoginRequestDto loginRequestDto = new LoginRequestDto("shit123@email.com", "P@ssW0rd");
+
+        String url = getUrl(signUp(userSaveRequestDto));
+        String sid = getLoginCookie(loginRequestDto);
         UserRequestDto userRequestDto = new UserRequestDto("jm", "hansome@gmail.com", "P!ssW0rd");
 
-        updateUser(userRequestDto, getUrl(signUp(userSaveRequestDto)))
+        updateUser(userRequestDto, url, sid)
             .isOk()
             .expectBody()
             .jsonPath("$.name").isEqualTo(userRequestDto.getName())
@@ -44,17 +49,57 @@ public class UserControllerTests extends BasicControllerTests {
     }
 
     @Test
-    void user_delete_not_found() {
-        deleteUser(USER_URL + "/999")
-            .isNotFound();  //404
+    @DisplayName("가입된 유저가 다른 유저의 수정을 시도할 때")
+    void unauthorized_user_update() {
+        UserRequestDto authorizedUser = new UserRequestDto("Jmm", "jm@naver.com", "p@ssW0rd");
+        UserRequestDto unauthorizedUser = new UserRequestDto("conas", "conas@naver.com", "p@ssW0rd");
+        UserRequestDto unauthorizedUpdateRequest = new UserRequestDto("pobi", "conas@naver.com", "p@ssW0rd");
+
+        String url = getUrl(signUp(authorizedUser));
+        signUp(unauthorizedUser);
+        LoginRequestDto loginRequestDto = new LoginRequestDto("conas@naver.com", "p@ssW0rd");
+        String sid = getLoginCookie(loginRequestDto);
+
+        updateUser(unauthorizedUpdateRequest, url, sid).isUnauthorized();
     }
 
     @Test
-    void user_delete_no_content() {
-        UserRequestDto userSaveRequestDto = new UserRequestDto("robby", "shit222@email.com", "P@ssW0rd");
+    @DisplayName("가입되지 않은 유저가 가입되지 않은 유저 삭제를 시도할 때")
+    void no_signin_delete_no_signin_user() {
+        deleteUser(USER_URL + "/999", null)
+            .isUnauthorized();  //404
+    }
 
-        deleteUser(getUrl(signUp(userSaveRequestDto)))
+    @Test
+    @DisplayName("가입되지 않은 유저가 가입된 유저 삭제를 시도할 때")
+    void no_sigin_delete_user() {
+        deleteUser(USER_URL + "/1", null)
+            .isUnauthorized();  //404
+    }
+
+    @Test
+    @DisplayName("가입된 유저가 자신의 유저 삭제를 시도할 때")
+    void authorized_user_delete_no_content() {
+        UserRequestDto userRequestDto = new UserRequestDto("robby", "shit222@email.com", "P@ssW0rd");
+        LoginRequestDto loginRequestDto = new LoginRequestDto("shit222@email.com", "P@ssW0rd");
+        String url = getUrl(signUp(userRequestDto));
+        String sid = getLoginCookie(loginRequestDto);
+        deleteUser(url, sid)
             .isNoContent();
+    }
+
+    @Test
+    @DisplayName("가입된 유저가 다른 유저의 삭제를 시도할 때")
+    void unauthorized_user_delete() {
+        UserRequestDto authorizedUserDto = new UserRequestDto("normal", "normalUser@gmail.com", "p@ssW0rd");
+        UserRequestDto unauthorizedUserDto = new UserRequestDto("conas", "conas@gmail.com", "p@ssW0rd");
+        LoginRequestDto loginRequestDto = new LoginRequestDto("conas@gmail.com", "p@ssW0rd");
+        String authorizedUserUrl = getUrl(signUp(authorizedUserDto));
+        signUp(unauthorizedUserDto);
+
+        String sid = getLoginCookie(loginRequestDto);
+        deleteUser(authorizedUserUrl, sid)
+            .isUnauthorized();
     }
 
     @Test
@@ -77,7 +122,7 @@ public class UserControllerTests extends BasicControllerTests {
             .expectStatus();
     }
 
-    private StatusAssertions updateUser(UserRequestDto userRequestDto, String uri) {
+    private StatusAssertions updateUser(UserRequestDto userRequestDto, String uri, String sid) {
         return webTestClient.put()
             .uri(uri)
             .cookie(COOKIE_JSESSIONID, sid)
@@ -86,7 +131,7 @@ public class UserControllerTests extends BasicControllerTests {
             .expectStatus();
     }
 
-    private StatusAssertions deleteUser(String url) {
+    private StatusAssertions deleteUser(String url, String sid) {
         return webTestClient.delete()
             .uri(url)
             .cookie(COOKIE_JSESSIONID, sid)

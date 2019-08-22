@@ -21,13 +21,13 @@ public class UserService {
         return user.getId();
     }
 
-    public UserResponse update(Long userId, UserRequestDto userRequestDto) {
-        User user = userInternalService.update(userId, userRequestDto);
+    public UserResponse update(Long id, Long sessionId, UserRequestDto userRequestDto) {
+        User user = userInternalService.update(id, sessionId, userRequestDto);
         return userConverter.toResponse(user);
     }
 
-    public void delete(Long id) {
-        userInternalService.delete(id);
+    public void delete(Long id, Long sessionId) {
+        userInternalService.delete(id, sessionId);
     }
 
     public UserResponse findbyId(Long id) {
