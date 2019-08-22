@@ -1,6 +1,8 @@
 package com.woowacourse.edd.presentation.controller;
 
+import com.woowacourse.edd.application.dto.LoginRequestDto;
 import com.woowacourse.edd.application.dto.UserRequestDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
@@ -9,6 +11,14 @@ import reactor.core.publisher.Mono;
 import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
 
 public class UserControllerTests extends BasicControllerTests {
+    private String sid;
+
+    @BeforeEach
+    void setUp() {
+        LoginRequestDto loginRequestDto = new LoginRequestDto("kangmin789@naver.com", "P@ssW0rd");
+
+        sid = getLoginCookie(loginRequestDto);
+    }
 
     @Test
     void user_save() {
@@ -48,19 +58,6 @@ public class UserControllerTests extends BasicControllerTests {
     }
 
     @Test
-    void user_delete_when_already_deleted() {
-        UserRequestDto userRequestDto = new UserRequestDto("conas", "conas@email.com", "P@ssW0rd");
-
-        String url = getUrl(signUp(userRequestDto));
-
-        deleteUser(url)
-            .isNoContent();
-
-        deleteUser(url)
-            .isNotFound();
-    }
-
-    @Test
     void find_by_id() {
         findUser(USER_URL + "/1").isOk();
     }
@@ -83,6 +80,7 @@ public class UserControllerTests extends BasicControllerTests {
     private StatusAssertions updateUser(UserRequestDto userRequestDto, String uri) {
         return webTestClient.put()
             .uri(uri)
+            .cookie(COOKIE_JSESSIONID, sid)
             .body(Mono.just(userRequestDto), UserRequestDto.class)
             .exchange()
             .expectStatus();
@@ -91,6 +89,7 @@ public class UserControllerTests extends BasicControllerTests {
     private StatusAssertions deleteUser(String url) {
         return webTestClient.delete()
             .uri(url)
+            .cookie(COOKIE_JSESSIONID, sid)
             .exchange()
             .expectStatus();
     }
