@@ -30,7 +30,8 @@ public class Video {
     @Column(nullable = false)
     private LocalDateTime createDate;
 
-    private Video() { }
+    private Video() {
+    }
 
     public Video(String youtubeId, String title, String contents) {
         checkYoutubeId(youtubeId);

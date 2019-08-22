@@ -23,8 +23,10 @@ import static org.mockito.Mockito.when;
 class UserInternalServiceTests {
 
     private User user;
+
     @InjectMocks
     UserInternalService userInternalService;
+
     @Mock
     private UserRepository userRepository;
 
