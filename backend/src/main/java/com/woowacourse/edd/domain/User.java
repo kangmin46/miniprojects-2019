@@ -1,6 +1,5 @@
 package com.woowacourse.edd.domain;
 
-import com.woowacourse.edd.application.dto.UserRequestDto;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -33,7 +32,8 @@ public class User {
 
     private Boolean isDeleted;
 
-    private User() { }
+    private User() {
+    }
 
     public User(String name, String email, String password, Boolean isDeleted) {
         this.name = name;
@@ -42,10 +42,10 @@ public class User {
         this.isDeleted = isDeleted;
     }
 
-    public void update(UserRequestDto userRequestDto) {
-        this.name = userRequestDto.getName();
-        this.email = userRequestDto.getEmail();
-        this.password = userRequestDto.getPassword();
+    public void update(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     public void delete() {
@@ -64,11 +64,11 @@ public class User {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public Boolean isDeleted() {
         return isDeleted;
+    }
+
+    public boolean isNotMatchPassword(String password) {
+        return !this.password.equals(password);
     }
 }
