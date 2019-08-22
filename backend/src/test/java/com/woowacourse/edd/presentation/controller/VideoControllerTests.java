@@ -175,6 +175,4 @@ public class VideoControllerTests extends BasicControllerTests {
             .exchange()
             .expectStatus();
     }
-
-
 }
