@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS comment (
 	create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
 	update_date DATETIME DEFAULT CURRENT_TIMESTAMP,
 	author_id BIGINT NOT NULL,
-	vidoe_id BIGINT NOT NULL,
+	video_id BIGINT NOT NULL,
 	PRIMARY KEY(id),
 	FOREIGN KEY(author_id) REFERENCES user(id),
-	FOREIGN KEY(vidoe_id) REFERENCES video(id)
+	FOREIGN KEY(video_id) REFERENCES video(id)
 );
