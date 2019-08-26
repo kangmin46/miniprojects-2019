@@ -42,7 +42,7 @@ const Api = function () {
         'Content-Type': 'application/json'
     }
 
-    const baseUrl = 'http://localhost:8080'
+    const baseUrl = '/api'
 
     const requestUser = (id) => {
         return request(`${baseUrl}/v1/users/${id}`, 'GET');
