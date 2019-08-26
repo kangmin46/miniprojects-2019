@@ -13,14 +13,11 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class VideoTests {
+public class VideoTests extends DomainBasicTests {
 
     private static final String VALID_YOUTUBE_ID = "abc";
     private static final String VALID_TITLE = "abcd";
     private static final String VALID_CONTENTS = "abcde";
-    private static final String EMPTY = "";
-    private static final String BLANK = " ";
-
     private static User creator;
 
     @BeforeEach
@@ -49,9 +46,5 @@ public class VideoTests {
     @MethodSource("invalidStrings")
     void contents_invalid(final String invalidString) {
         assertThrows(InvalidContentsException.class, () -> new Video(VALID_YOUTUBE_ID, VALID_TITLE, invalidString, creator));
-    }
-
-    private static Stream<String> invalidStrings() {
-        return Stream.of(EMPTY, BLANK, null);
     }
 }

@@ -1,5 +1,6 @@
 package com.woowacourse.edd.domain;
 
+import com.woowacourse.edd.exceptions.InvalidContentsException;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +15,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public  class Comment {
@@ -44,9 +46,16 @@ public  class Comment {
     private LocalDateTime updateDate;
 
     public Comment(String contents, Video video, User author) {
-        this.contents = contents;
+        checkContents(contents);
+        this.contents = contents.trim();
         this.video = video;
         this.author = author;
+    }
+
+    private void checkContents(String contents) {
+        if (Objects.isNull(contents) || contents.trim().isEmpty()) {
+            throw new InvalidContentsException();
+        }
     }
 
     public Long getId() {
