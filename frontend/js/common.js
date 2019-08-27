@@ -43,7 +43,7 @@ const Api = function () {
     }
 
     const baseUrl = '/api'
-    
+
     const request = (url, method, body) => {
         return fetch(url, {
             method: method,
