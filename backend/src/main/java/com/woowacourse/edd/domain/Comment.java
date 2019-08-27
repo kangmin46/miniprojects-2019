@@ -45,6 +45,9 @@ public  class Comment {
     @Column(nullable = false)
     private LocalDateTime updateDate;
 
+    public Comment() {
+    }
+
     public Comment(String contents, Video video, User author) {
         checkContents(contents);
         this.contents = contents.trim();
