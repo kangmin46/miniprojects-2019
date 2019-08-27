@@ -2,7 +2,7 @@ package com.woowacourse.edd.presentation.controller;
 
 import com.woowacourse.edd.application.dto.CommentRequestDto;
 import com.woowacourse.edd.application.dto.LoginRequestDto;
-import com.woowacourse.edd.application.dto.UserRequestDto;
+import com.woowacourse.edd.application.dto.UserSaveRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -111,9 +111,9 @@ public class CommentControllerTests extends BasicControllerTests {
         String invalidEmail = "heebong@email.com";
         String invalidPW = "P@ssw0rd";
 
-        UserRequestDto invalidUserRequestDto = new UserRequestDto("heebong", invalidEmail, invalidPW);
+        UserSaveRequestDto invalidUserSaveRequestDto = new UserSaveRequestDto("heebong", invalidEmail, invalidPW);
         LoginRequestDto invalidUserLoginRequestDto = new LoginRequestDto(invalidEmail, invalidPW);
-        signUp(invalidUserRequestDto);
+        signUp(invalidUserSaveRequestDto);
         String cookie = getLoginCookie(invalidUserLoginRequestDto);
 
         String preContents = "secondContents";
@@ -196,8 +196,8 @@ public class CommentControllerTests extends BasicControllerTests {
 
     @Test
     void delete_invalid_userId() {
-        UserRequestDto userRequestDto = new UserRequestDto("heebong", "heebong@naver.com", "P@ssW0rd");
-        signUp(userRequestDto);
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("heebong", "heebong@naver.com", "P@ssW0rd");
+        signUp(userSaveRequestDto);
         String cookie = getLoginCookie(new LoginRequestDto("heebong@naver.com", "P@ssW0rd"));
 
         CommentRequestDto commentRequestDto = new CommentRequestDto("contents");
