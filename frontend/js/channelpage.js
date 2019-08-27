@@ -16,7 +16,10 @@ document.querySelector('#btn-update').addEventListener('click', () => {
     channelCtx.flags.isInUpdate = changeUpdateState(channelCtx.flags.isInUpdate)
 })
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 55b57fde391ee5553d9d6b0f699bd0c11ee7b13c
 document.querySelector('#btn-submit').addEventListener('click', () => {
     const nameInput = document.querySelector('#update-name')
     const emailInput = document.querySelector('#update-email')
@@ -32,7 +35,10 @@ document.querySelector('#btn-submit').addEventListener('click', () => {
             window.location.reload()
             return
         }
+<<<<<<< HEAD
         console.log(res);
+=======
+>>>>>>> 55b57fde391ee5553d9d6b0f699bd0c11ee7b13c
         res.json()
         .then(json => {
             const alertElm = document.querySelector('.alert.alert-danger')
@@ -40,9 +46,12 @@ document.querySelector('#btn-submit').addEventListener('click', () => {
             alertElm.classList.remove('d-none')
         })
     })
+<<<<<<< HEAD
     .catch(err => {
         console.log(err)
     })
+=======
+>>>>>>> 55b57fde391ee5553d9d6b0f699bd0c11ee7b13c
 })
 
 document.querySelector('#btn-leave').addEventListener('click', () => {
@@ -64,7 +73,10 @@ document.querySelector('#btn-leave').addEventListener('click', () => {
     })
 })
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 55b57fde391ee5553d9d6b0f699bd0c11ee7b13c
 const changeUpdateState = function (flags) {
     const nameElm = document.querySelector('#user-name')
     const emailElm = document.querySelector('#user-email')
@@ -89,6 +101,7 @@ const changeUpdateState = function (flags) {
         emailElm.classList.remove('d-none')
         nameInput.classList.add('d-none')
         emailInput.classList.add('d-none')
+        alertElm.classList.add('d-none')
 
         document.querySelector('#btn-submit').classList.add('d-none')
         document.querySelector('#btn-update').innerHTML = '<i class="ti-pencil"></i>'
@@ -117,9 +130,16 @@ const channelService = (function () {
                     return;
                 }
                 return res.json();
+<<<<<<< HEAD
             }).then(json => {
                 setUserInfo(json.name, json.email)
 
+=======
+            })
+            .then(json => {
+                setUserInfo(json.name, json.email)
+    
+>>>>>>> 55b57fde391ee5553d9d6b0f699bd0c11ee7b13c
                 if (id && Number(id) === json.id) {
                     document.querySelector('#btn-update').classList.remove('d-none')
                     document.querySelector('#btn-leave').classList.remove('d-none')
@@ -127,7 +147,11 @@ const channelService = (function () {
             });
             return;
         }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 55b57fde391ee5553d9d6b0f699bd0c11ee7b13c
         api.retrieveLoginInfo()
             .then(res => res.json())
             .then(json => api.requestUser(json.id))
@@ -143,4 +167,8 @@ const channelService = (function () {
     }
 })();
 
+<<<<<<< HEAD
 channelService.init();
+=======
+channelService.init();
+>>>>>>> 55b57fde391ee5553d9d6b0f699bd0c11ee7b13c

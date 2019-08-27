@@ -109,6 +109,22 @@ const Api = function () {
         return request(`${baseUrl}/v1/users`, 'POST', dataBody)
     }
 
+    const requestUser = (id) => {
+        return request(`${baseUrl}/v1/users/${id}`, 'GET');
+    }
+
+    const updateUser = (id, body) => {
+        return request(`${baseUrl}/v1/users/${id}`, 'PUT', body)
+    }
+
+    const deleteUser = (id) => {
+        return requestWithoutBody(`${baseUrl}/v1/users/${id}`, 'DELETE')
+    }
+
+    const retrieveLoginInfo = () => {
+        return requestWithoutBody(`${baseUrl}/v1/login/users`, 'GET')
+    }
+
     return {
         requestVideos,
         requestVideo,
@@ -121,8 +137,11 @@ const Api = function () {
         updateUser,
         retrieveLoginInfo,
         deleteUser,
+<<<<<<< HEAD
         requestMyChannelVideos
+=======
+>>>>>>> 55b57fde391ee5553d9d6b0f699bd0c11ee7b13c
     }
-
 }
+
 const api = new Api()

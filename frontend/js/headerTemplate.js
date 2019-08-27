@@ -10,7 +10,11 @@ const addHeader = function (headerElement){
                     </a>
                 </li>
                 <li>
+<<<<<<< HEAD
                 <a href="/" class="d-flex flex-row align-items-center"><img class="logo" src="./images/logo/youtube-logo.png"></a>
+=======
+                    <a href="/" class="d-flex flex-row align-items-center"><img class="logo" src="./images/logo/youtube-logo.png"></a>
+>>>>>>> 55b57fde391ee5553d9d6b0f699bd0c11ee7b13c
                 </li>
             </ul>
             <ul class="nav-right padding-8">
