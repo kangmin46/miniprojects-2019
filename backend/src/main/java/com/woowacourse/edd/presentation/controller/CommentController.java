@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,5 +41,13 @@ public class CommentController {
     public ResponseEntity<List<CommentResponse>> retrieve(@PathVariable Long videoId) {
         List<CommentResponse> commentResponses = commentService.retrieve(videoId);
         return ResponseEntity.ok(commentResponses);
+    }
+
+    @PutMapping(VIDEO_URL + "/{videoId}" + COMMENT_URL + "/{commentId}")
+    public ResponseEntity<CommentResponse> update(@PathVariable("videoId") Long videoId, @PathVariable("commentId") Long commentId,
+                                                  @RequestBody CommentRequestDto commentRequestDto, HttpSession session) {
+        SessionUser sessionUser = (SessionUser) session.getAttribute("user");
+        CommentResponse commentResponse = commentService.update(commentId, sessionUser.getId(), videoId, commentRequestDto);
+        return ResponseEntity.ok(commentResponse);
     }
 }

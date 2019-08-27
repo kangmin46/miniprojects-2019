@@ -1,6 +1,8 @@
 package com.woowacourse.edd.domain;
 
+import com.woowacourse.edd.exceptions.InvalidAccessException;
 import com.woowacourse.edd.exceptions.InvalidContentsException;
+import com.woowacourse.edd.exceptions.UnauthorizedAccessException;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -83,5 +85,23 @@ public  class Comment {
 
     public LocalDateTime getUpdateDate() {
         return updateDate;
+    }
+
+    public void update(String contents, Long userId, Long videoId) {
+        checkUser(userId);
+        checkVideo(videoId);
+        this.contents = contents;
+    }
+
+    private void checkUser(Long userId) {
+        if (author.isNotMatch(userId)) {
+            throw new UnauthorizedAccessException();
+        }
+    }
+
+    private void checkVideo(Long videoId) {
+        if (video.isNotMatch(videoId)) {
+            throw new InvalidAccessException();
+        }
     }
 }

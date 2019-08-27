@@ -1,6 +1,8 @@
 package com.woowacourse.edd.application.service;
 
+import com.woowacourse.edd.application.dto.CommentRequestDto;
 import com.woowacourse.edd.domain.Comment;
+import com.woowacourse.edd.exceptions.CommentNotFoundException;
 import com.woowacourse.edd.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,18 @@ public class CommentInternalService {
         return commentRepository.save(comment);
     }
 
+    @Transactional(readOnly = true)
     public List<Comment> retrieve(Long videoId) {
         return commentRepository.findCommentsByVideo_Id(videoId);
+    }
+
+    public Comment findById(Long id) {
+        return commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
+    }
+
+    public Comment update(Long commentId, Long userId, Long videoId, CommentRequestDto commentRequestDto) {
+        Comment comment = findById(commentId);
+        comment.update(commentRequestDto.getContents(), userId, videoId);
+        return comment;
     }
 }

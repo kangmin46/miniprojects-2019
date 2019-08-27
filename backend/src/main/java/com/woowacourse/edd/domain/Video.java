@@ -117,4 +117,8 @@ public class Video {
             ", creator=" + creator +
             '}';
     }
+
+    public boolean isNotMatch(Long videoId) {
+        return id != videoId;
+    }
 }

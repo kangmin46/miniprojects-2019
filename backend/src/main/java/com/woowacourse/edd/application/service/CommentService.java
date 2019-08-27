@@ -6,6 +6,7 @@ import com.woowacourse.edd.application.response.CommentResponse;
 import com.woowacourse.edd.domain.Comment;
 import com.woowacourse.edd.domain.User;
 import com.woowacourse.edd.domain.Video;
+import com.woowacourse.edd.exceptions.UnauthorizedAccessException;
 import com.woowacourse.edd.presentation.controller.CommentController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,9 +33,7 @@ public class CommentService {
     public CommentResponse save(Long videoId, Long authorId, CommentRequestDto commentRequestDto) {
         Video video = videoInternalService.findById(videoId);
         User author = userInternalService.findById(authorId);
-
-        Comment comment = CommentConverter.toEntity(video, author, commentRequestDto);
-        comment = commentInternalService.save(comment);
+        Comment comment = commentInternalService.save(CommentConverter.toEntity(video, author, commentRequestDto));
         return CommentConverter.toResponse(comment);
     }
 
@@ -43,6 +42,10 @@ public class CommentService {
         return comments.stream()
             .map(CommentConverter::toResponse)
             .collect(Collectors.toList());
-        
+    }
+
+    public CommentResponse update(Long commentId, Long userId, Long videoId, CommentRequestDto commentRequestDto) {
+        Comment comment = commentInternalService.update(commentId,userId,videoId,commentRequestDto);
+        return CommentConverter.toResponse(comment);
     }
 }

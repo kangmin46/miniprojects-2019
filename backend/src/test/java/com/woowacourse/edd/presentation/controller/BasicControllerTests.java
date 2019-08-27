@@ -48,6 +48,14 @@ public class BasicControllerTests {
         checkErrorResponse(bodyContentSpec, errorMessage);
     }
 
+    protected void assertFailForbidden(StatusAssertions statusAssertions, String errorMessage) {
+        WebTestClient.BodyContentSpec bodyContentSpec = statusAssertions
+            .isForbidden()
+            .expectBody();
+
+        checkErrorResponse(bodyContentSpec, errorMessage);
+    }
+
     protected void assertFailUnauthorized(StatusAssertions statusAssertions, String errorMessage) {
         WebTestClient.BodyContentSpec bodyContentSpec = statusAssertions
             .isUnauthorized()
@@ -84,7 +92,7 @@ public class BasicControllerTests {
             .exchange()
             .expectStatus()
             .isCreated()
-            .expectHeader().valueMatches("Location", USER_URL + "/\\d")
+            .expectHeader().valueMatches("Location", USER_URL + "/\\d+")
             .expectBody()
             .returnResult();
     }

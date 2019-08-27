@@ -2,13 +2,17 @@ package com.woowacourse.edd.presentation.controller;
 
 import com.woowacourse.edd.application.dto.CommentRequestDto;
 import com.woowacourse.edd.application.dto.LoginRequestDto;
+import com.woowacourse.edd.application.dto.UserRequestDto;
 import com.woowacourse.edd.exceptions.InvalidContentsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import static com.woowacourse.edd.exceptions.CommentNotFoundException.COMMENT_NOT_FOUND_MESSAGE;
+import static com.woowacourse.edd.exceptions.InvalidAccessException.INVALID_ACCESS_MESSAGE;
 import static com.woowacourse.edd.exceptions.InvalidContentsException.INVALID_CONTENTS_MESSAGE;
+import static com.woowacourse.edd.exceptions.UnauthorizedAccessException.UNAUTHORIZED_ACCESS_MESSAGE;
 import static com.woowacourse.edd.presentation.controller.CommentController.COMMENT_URL;
 import static com.woowacourse.edd.presentation.controller.VideoController.VIDEO_URL;
 
@@ -47,6 +51,7 @@ public class CommentControllerTests extends BasicControllerTests {
 
     @Test
     void retrieveComments() {
+
         getComments(DEFAULT_VIDEO_ID)
             .expectStatus()
             .isOk()
@@ -67,6 +72,105 @@ public class CommentControllerTests extends BasicControllerTests {
             .jsonPath("$.length()").isEqualTo(0L);
     }
 
+    @Test
+    void update() {
+        String preContents = "secondContents";
+        String updateContents = "updateContents";
+        CommentRequestDto saveCommentRequestDto = new CommentRequestDto(preContents);
+        String returnUrl = saveComment(DEFAULT_VIDEO_ID,saveCommentRequestDto)
+            .expectBody()
+            .jsonPath("$.contents").isEqualTo(preContents)
+            .returnResult()
+            .getResponseHeaders()
+            .getLocation()
+            .toASCIIString();
+
+        CommentRequestDto  updateCommentRequestDto = new CommentRequestDto(updateContents);
+        updateComment(returnUrl, updateCommentRequestDto)
+            .expectStatus()
+            .isOk()
+            .expectBody()
+            .jsonPath("$.id").isNotEmpty()
+            .jsonPath("$.contents").isEqualTo(updateContents)
+            .jsonPath("$.author.id").isEqualTo(1L)
+            .jsonPath("$.author.name").isEqualTo(DEFAULT_LOGIN_NAME)
+            .jsonPath("$.createDate").isNotEmpty();
+    }
+
+    @Test
+    void update_invalid_videoId() {
+        String preContents = "secondContents";
+        String updateContents = "updateContents";
+        CommentRequestDto saveCommentRequestDto = new CommentRequestDto(preContents);
+        String returnUrl = saveComment(DEFAULT_VIDEO_ID,saveCommentRequestDto)
+            .expectBody()
+            .jsonPath("$.contents").isEqualTo(preContents)
+            .returnResult()
+            .getResponseHeaders()
+            .getLocation()
+            .toASCIIString();
+
+        String[] urls = returnUrl.split("/");
+        Long commentId = Long.valueOf(urls[urls.length - 1]);
+
+        CommentRequestDto  updateCommentRequestDto = new CommentRequestDto(updateContents);
+
+        assertFailBadRequest(updateComment(DEFAULT_VIDEO_ID + 1L, commentId, updateCommentRequestDto, cookie)
+            .expectStatus(), INVALID_ACCESS_MESSAGE);
+    }
+
+    @Test
+    void update_invalid_user() {
+        String invalidEmail = "heebong@email.com";
+        String invalidPW = "P@ssw0rd";
+
+        UserRequestDto invalidUserRequestDto = new UserRequestDto("heebong", invalidEmail, invalidPW);
+        LoginRequestDto invalidUserLoginRequestDto = new LoginRequestDto(invalidEmail, invalidPW);
+        signUp(invalidUserRequestDto);
+        String cookie = getLoginCookie(invalidUserLoginRequestDto);
+
+        String preContents = "secondContents";
+        String updateContents = "updateContents";
+        CommentRequestDto saveCommentRequestDto = new CommentRequestDto(preContents);
+        String returnUrl = saveComment(DEFAULT_VIDEO_ID,saveCommentRequestDto)
+            .expectBody()
+            .jsonPath("$.contents").isEqualTo(preContents)
+            .returnResult()
+            .getResponseHeaders()
+            .getLocation()
+            .toASCIIString();
+
+        String[] urls = returnUrl.split("/");
+        Long commentId = Long.valueOf(urls[urls.length - 1]);
+
+        CommentRequestDto  updateCommentRequestDto = new CommentRequestDto(updateContents);
+
+        assertFailForbidden(updateComment(DEFAULT_VIDEO_ID , commentId, updateCommentRequestDto, cookie)
+            .expectStatus(), UNAUTHORIZED_ACCESS_MESSAGE);
+    }
+
+    @Test
+    void update_invalid_commentId() {
+        String preContents = "secondContents";
+        String updateContents = "updateContents";
+        CommentRequestDto saveCommentRequestDto = new CommentRequestDto(preContents);
+        String returnUrl = saveComment(DEFAULT_VIDEO_ID,saveCommentRequestDto)
+            .expectBody()
+            .jsonPath("$.contents").isEqualTo(preContents)
+            .returnResult()
+            .getResponseHeaders()
+            .getLocation()
+            .toASCIIString();
+
+        String[] urls = returnUrl.split("/");
+        Long commentId = Long.valueOf(urls[urls.length - 1]);
+
+        CommentRequestDto  updateCommentRequestDto = new CommentRequestDto(updateContents);
+
+        assertFailNotFound(updateComment(DEFAULT_VIDEO_ID, commentId + 100L, updateCommentRequestDto, cookie)
+            .expectStatus(), COMMENT_NOT_FOUND_MESSAGE);
+    }
+
     private WebTestClient.ResponseSpec saveComment(Long videoId, CommentRequestDto commentRequestDto) {
         return executePost(VIDEO_URL+"/" + videoId + COMMENT_URL)
             .cookie(COOKIE_JSESSIONID,cookie)
@@ -76,6 +180,20 @@ public class CommentControllerTests extends BasicControllerTests {
 
     private WebTestClient.ResponseSpec getComments(Long videoId) {
         return executeGet(VIDEO_URL+"/"+videoId + COMMENT_URL)
+            .exchange();
+    }
+
+    private WebTestClient.ResponseSpec updateComment(String returnUrl, CommentRequestDto updateCommentRequestDto) {
+        return executePut(returnUrl)
+            .cookie(COOKIE_JSESSIONID,cookie)
+            .body(Mono.just(updateCommentRequestDto), CommentRequestDto.class)
+            .exchange();
+    }
+
+    private WebTestClient.ResponseSpec updateComment(Long videoId, Long commentId, CommentRequestDto updateCommentRequestDto, String cookie) {
+        return executePut(VIDEO_URL + "/" + videoId + COMMENT_URL + "/" + commentId)
+            .cookie(COOKIE_JSESSIONID,cookie)
+            .body(Mono.just(updateCommentRequestDto), CommentRequestDto.class)
             .exchange();
     }
 }
