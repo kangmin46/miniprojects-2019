@@ -102,18 +102,18 @@ public class VideoControllerTests extends BasicControllerTests {
     @Test
     void update() {
         String jsessionid = getDefaultLoginSessionId();
-        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID,DEFAULT_VIDEO_TITLE,DEFAULT_VIDEO_CONTENTS);
+        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 
-        String returnUrl = saveVideo(videoSaveRequestDto,jsessionid)
+        String returnUrl = saveVideo(videoSaveRequestDto, jsessionid)
             .isCreated()
             .expectBody()
-        .returnResult()
-        .getResponseHeaders()
-        .getLocation()
-        .toASCIIString();
+            .returnResult()
+            .getResponseHeaders()
+            .getLocation()
+            .toASCIIString();
 
         String[] urls = returnUrl.split("/");
-        Long id = Long.valueOf(urls[urls.length-1]);
+        Long id = Long.valueOf(urls[urls.length - 1]);
         String youtubeId = "updateYoutubeId";
         String title = "updateTitle";
         String contetns = "updateContents";

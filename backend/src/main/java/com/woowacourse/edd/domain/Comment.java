@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-public  class Comment {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,9 +88,13 @@ public  class Comment {
     }
 
     public void update(String contents, Long userId, Long videoId) {
+        checkControllable(userId, videoId);
+        this.contents = contents;
+    }
+
+    public void checkControllable(Long userId, Long videoId) {
         checkUser(userId);
         checkVideo(videoId);
-        this.contents = contents;
     }
 
     private void checkUser(Long userId) {

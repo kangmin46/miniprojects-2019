@@ -8,8 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.stream.Stream;
-
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,8 +44,8 @@ public class CommentTests extends DomainBasicTests {
     void update() {
         when(author.isNotMatch(any())).thenReturn(false);
         when(video.isNotMatch(any())).thenReturn(false);
-        Comment comment = new Comment("contents",video,author);
-        comment.update("updateContent",1L,1L);
+        Comment comment = new Comment("contents", video, author);
+        comment.update("updateContent", 1L, 1L);
         assertThat(comment.getContents()).isEqualTo("updateContent");
     }
 }

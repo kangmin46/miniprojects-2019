@@ -38,9 +38,9 @@ public class CommentInternalServiceTests {
 
     @BeforeEach
     void setUp() {
-        user = spy(new User("robby","kangmin789@naver.com", "P@ssW0rd"));
-        video = spy(new Video("youtubeId","title","videoContents",user));
-        comment = new Comment("contents",video,user);
+        user = spy(new User("robby", "kangmin789@naver.com", "P@ssW0rd"));
+        video = spy(new Video("youtubeId", "title", "videoContents", user));
+        comment = new Comment("contents", video, user);
         commentRequestDto = new CommentRequestDto("updateContents");
     }
 
@@ -50,7 +50,7 @@ public class CommentInternalServiceTests {
         when(video.isNotMatch(any())).thenReturn(false);
         when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
 
-        Comment updateComment = commentInternalService.update(1L,1L,1L,commentRequestDto);
+        Comment updateComment = commentInternalService.update(1L, 1L, 1L, commentRequestDto);
 
         assertThat(updateComment.getContents()).isEqualTo("updateContents");
     }
@@ -62,7 +62,7 @@ public class CommentInternalServiceTests {
         when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
 
         assertThrows(InvalidAccessException.class, () -> {
-            commentInternalService.update(1L,1L,1L,commentRequestDto);
+            commentInternalService.update(1L, 1L, 1L, commentRequestDto);
         });
     }
 
@@ -72,7 +72,7 @@ public class CommentInternalServiceTests {
         when(commentRepository.findById(any())).thenReturn(Optional.of(comment));
 
         assertThrows(UnauthorizedAccessException.class, () -> {
-            commentInternalService.update(1L,1L,1L,commentRequestDto);
+            commentInternalService.update(1L, 1L, 1L, commentRequestDto);
         });
     }
 }

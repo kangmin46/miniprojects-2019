@@ -39,4 +39,11 @@ public class CommentInternalService {
         comment.update(commentRequestDto.getContents(), userId, videoId);
         return comment;
     }
+
+
+    public void delete(Long commentId, Long userId, Long videoId) {
+        Comment comment = findById(commentId);
+        comment.checkControllable(userId, videoId);
+        commentRepository.deleteById(commentId);
+    }
 }
