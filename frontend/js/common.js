@@ -43,23 +43,7 @@ const Api = function () {
     }
 
     const baseUrl = '/api'
-
-    const requestUser = (id) => {
-        return request(`${baseUrl}/v1/users/${id}`, 'GET');
-    }
-
-    const updateUser = (id, body) => {
-        return request(`${baseUrl}/v1/users/${id}`, 'PUT', body)
-    }
-
-    const deleteUser = (id) => {
-        return requestWithoutBody(`${baseUrl}/v1/users/${id}`, 'DELETE')
-    }
-
-    const retrieveLoginInfo = () => {
-        return requestWithoutBody(`${baseUrl}/v1/login/users`, 'GET')
-    }
-
+    
     const request = (url, method, body) => {
         return fetch(url, {
             method: method,
