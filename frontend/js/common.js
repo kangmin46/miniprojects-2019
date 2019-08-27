@@ -137,10 +137,7 @@ const Api = function () {
         updateUser,
         retrieveLoginInfo,
         deleteUser,
-<<<<<<< HEAD
         requestMyChannelVideos
-=======
->>>>>>> 55b57fde391ee5553d9d6b0f699bd0c11ee7b13c
     }
 }
 
