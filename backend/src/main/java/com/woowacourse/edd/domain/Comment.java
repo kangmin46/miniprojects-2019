@@ -30,7 +30,7 @@ public  class Comment {
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vidoe_id", nullable = false)
+    @JoinColumn(name = "video_id", nullable = false)
     private Video video;
 
     @ManyToOne(fetch = FetchType.LAZY)
