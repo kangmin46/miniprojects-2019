@@ -45,7 +45,7 @@ public class CommentControllerTests extends BasicControllerTests {
     @Test
     void save_invalid_contents() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(" ");
-        assertFailBadRequest(saveComment(DEFAULT_VIDEO_ID, commentRequestDto).expectStatus(), INVALID_CONTENTS_MESSAGE);
+        assertFailBadRequest(saveComment(DEFAULT_VIDEO_ID, commentRequestDto), INVALID_CONTENTS_MESSAGE);
     }
 
     @Test
@@ -102,8 +102,8 @@ public class CommentControllerTests extends BasicControllerTests {
 
         CommentRequestDto updateCommentRequestDto = new CommentRequestDto(updateContents);
 
-        assertFailBadRequest(updateComment(DEFAULT_VIDEO_ID + 1L, commentId, updateCommentRequestDto, cookie)
-            .expectStatus(), INVALID_ACCESS_MESSAGE);
+        assertFailBadRequest(updateComment(DEFAULT_VIDEO_ID + 1L, commentId, updateCommentRequestDto, cookie),
+            INVALID_ACCESS_MESSAGE);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class CommentControllerTests extends BasicControllerTests {
         CommentRequestDto updateCommentRequestDto = new CommentRequestDto(updateContents);
 
         assertFailForbidden(updateComment(DEFAULT_VIDEO_ID, commentId, updateCommentRequestDto, cookie)
-            .expectStatus(), UNAUTHORIZED_ACCESS_MESSAGE);
+            , UNAUTHORIZED_ACCESS_MESSAGE);
     }
 
     @Test
@@ -143,7 +143,7 @@ public class CommentControllerTests extends BasicControllerTests {
         CommentRequestDto updateCommentRequestDto = new CommentRequestDto(updateContents);
 
         assertFailNotFound(updateComment(DEFAULT_VIDEO_ID, commentId + 100L, updateCommentRequestDto, cookie)
-            .expectStatus(), COMMENT_NOT_FOUND_MESSAGE);
+           , COMMENT_NOT_FOUND_MESSAGE);
     }
 
     @Test
@@ -176,7 +176,7 @@ public class CommentControllerTests extends BasicControllerTests {
 
         Long commentId = getPathVariable(returnUrl);
         assertFailNotFound(deleteComment(commentId + 100L, DEFAULT_VIDEO_ID, cookie)
-            .expectStatus(), COMMENT_NOT_FOUND_MESSAGE);
+            , COMMENT_NOT_FOUND_MESSAGE);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class CommentControllerTests extends BasicControllerTests {
 
         Long commentId = getPathVariable(returnUrl);
         assertFailBadRequest(deleteComment(commentId, DEFAULT_VIDEO_ID + 100L, cookie)
-            .expectStatus(), INVALID_ACCESS_MESSAGE);
+            , INVALID_ACCESS_MESSAGE);
     }
 
     @Test
@@ -210,7 +210,7 @@ public class CommentControllerTests extends BasicControllerTests {
 
         Long commentId = getPathVariable(returnUrl);
         assertFailForbidden(deleteComment(commentId, DEFAULT_VIDEO_ID + 100L, cookie)
-            .expectStatus(), UNAUTHORIZED_ACCESS_MESSAGE);
+            , UNAUTHORIZED_ACCESS_MESSAGE);
     }
 
     private String getSaveUrl(String preContents, CommentRequestDto saveCommentRequestDto) {

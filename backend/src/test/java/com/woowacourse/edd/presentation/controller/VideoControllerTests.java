@@ -6,6 +6,7 @@ import com.woowacourse.edd.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
@@ -22,7 +23,9 @@ public class VideoControllerTests extends BasicControllerTests {
 
     @Test
     void find_video_by_id() {
-        findVideo("/" + DEFAULT_VIDEO_ID).isOk()
+        findVideo("/" + DEFAULT_VIDEO_ID)
+            .expectStatus()
+            .isOk()
             .expectBody()
             .jsonPath("$.id").isNotEmpty()
             .jsonPath("$.youtubeId").isEqualTo(DEFAULT_VIDEO_YOUTUBEID)
@@ -48,7 +51,9 @@ public class VideoControllerTests extends BasicControllerTests {
         saveVideo(new VideoSaveRequestDto("555", "tilte5", "contents5"), jsessionid);
         saveVideo(new VideoSaveRequestDto("666", "tilte6", "contents6"), jsessionid);
 
-        findVideos(0, 6, "createDate", "DESC").isOk().expectBody()
+        findVideos(0, 6, "createDate", "DESC")
+            .expectStatus()
+            .isOk().expectBody()
             .jsonPath("$.content.length()").isEqualTo(6)
             .jsonPath("$.content[0].youtubeId").isEqualTo("666")
             .jsonPath("$.content[3].youtubeId").isEqualTo("333")
@@ -60,7 +65,9 @@ public class VideoControllerTests extends BasicControllerTests {
     void save() {
         VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 
-        saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()).isCreated()
+        saveVideo(videoSaveRequestDto, getDefaultLoginSessionId())
+            .expectStatus()
+            .isCreated()
             .expectBody()
             .jsonPath("$.id").isNotEmpty()
             .jsonPath("$.youtubeId").isEqualTo(DEFAULT_VIDEO_YOUTUBEID)
@@ -105,6 +112,7 @@ public class VideoControllerTests extends BasicControllerTests {
         VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 
         String returnUrl = saveVideo(videoSaveRequestDto, jsessionid)
+            .expectStatus()
             .isCreated()
             .expectBody()
             .returnResult()
@@ -121,6 +129,7 @@ public class VideoControllerTests extends BasicControllerTests {
         VideoUpdateRequestDto videoUpdateRequestDto = new VideoUpdateRequestDto(youtubeId, title, contetns);
 
         updateVideo(id, videoUpdateRequestDto, jsessionid)
+            .expectStatus()
             .isOk()
             .expectHeader()
             .valueMatches("location", returnUrl)
@@ -140,13 +149,16 @@ public class VideoControllerTests extends BasicControllerTests {
     @Test
     void delete() {
         EntityExchangeResult<byte[]> res = saveVideo(new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS), getDefaultLoginSessionId())
+            .expectStatus()
             .isCreated()
             .expectBody()
             .returnResult();
 
         String[] id = res.getResponseHeaders().getLocation().toASCIIString().split("/");
 
-        deleteVideo(Long.valueOf(id[id.length - 1]), getDefaultLoginSessionId()).isNoContent();
+        deleteVideo(Long.valueOf(id[id.length - 1]), getDefaultLoginSessionId())
+            .expectStatus()
+            .isNoContent();
     }
 
     @Test
@@ -154,13 +166,12 @@ public class VideoControllerTests extends BasicControllerTests {
         assertFailNotFound(deleteVideo(100L, getDefaultLoginSessionId()), "그런 비디오는 존재하지 않아!");
     }
 
-    private StatusAssertions findVideo(String uri) {
+    private WebTestClient.ResponseSpec findVideo(String uri) {
         return executeGet(VIDEOS_URI + uri)
-            .exchange()
-            .expectStatus();
+            .exchange();
     }
 
-    private StatusAssertions findVideos(int page, int size, String sort, String direction) {
+    private WebTestClient.ResponseSpec findVideos(int page, int size, String sort, String direction) {
         UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
         builder.path(VIDEOS_URI)
             .query("page=" + page)
@@ -168,30 +179,26 @@ public class VideoControllerTests extends BasicControllerTests {
             .query("sort=" + sort + "," + direction);
         String uri = builder.build().toUriString();
         return executeGet(uri)
-            .exchange()
-            .expectStatus();
+            .exchange();
     }
 
-    private StatusAssertions saveVideo(VideoSaveRequestDto videoSaveRequestDto, String jsessionid) {
+    private WebTestClient.ResponseSpec saveVideo(VideoSaveRequestDto videoSaveRequestDto, String jsessionid) {
         return executePost(VIDEOS_URI)
             .cookie(COOKIE_JSESSIONID, jsessionid)
             .body(Mono.just(videoSaveRequestDto), VideoSaveRequestDto.class)
-            .exchange()
-            .expectStatus();
+            .exchange();
     }
 
-    private StatusAssertions updateVideo(Long id, VideoUpdateRequestDto videoUpdateRequestDto, String jsessionid) {
+    private WebTestClient.ResponseSpec updateVideo(Long id, VideoUpdateRequestDto videoUpdateRequestDto, String jsessionid) {
         return executePut(VIDEOS_URI + "/" + id)
             .cookie(COOKIE_JSESSIONID, jsessionid)
             .body(Mono.just(videoUpdateRequestDto), VideoUpdateRequestDto.class)
-            .exchange()
-            .expectStatus();
+            .exchange();
     }
 
-    private StatusAssertions deleteVideo(Long id, String jsessionid) {
+    private WebTestClient.ResponseSpec deleteVideo(Long id, String jsessionid) {
         return executeDelete(VIDEOS_URI + "/" + id)
             .cookie(COOKIE_JSESSIONID, jsessionid)
-            .exchange()
-            .expectStatus();
+            .exchange();
     }
 }
