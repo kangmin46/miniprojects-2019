@@ -3,9 +3,13 @@ package com.woowacourse.edd.domain;
 import com.woowacourse.edd.exceptions.InvalidAccessException;
 import com.woowacourse.edd.exceptions.InvalidContentsException;
 import com.woowacourse.edd.exceptions.UnauthorizedAccessException;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,6 +37,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "video_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Video video;
 
     @ManyToOne(fetch = FetchType.LAZY)

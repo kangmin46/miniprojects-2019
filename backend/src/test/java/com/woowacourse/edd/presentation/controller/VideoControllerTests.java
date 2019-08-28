@@ -24,8 +24,7 @@ public class VideoControllerTests extends BasicControllerTests {
     @Test
     void find_video_by_id() {
         findVideo("/" + DEFAULT_VIDEO_ID)
-            .expectStatus()
-            .isOk()
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$.id").isNotEmpty()
             .jsonPath("$.youtubeId").isEqualTo(DEFAULT_VIDEO_YOUTUBEID)
@@ -52,8 +51,8 @@ public class VideoControllerTests extends BasicControllerTests {
         saveVideo(new VideoSaveRequestDto("666", "tilte6", "contents6"), jsessionid);
 
         findVideos(0, 6, "createDate", "DESC")
-            .expectStatus()
-            .isOk().expectBody()
+            .expectStatus().isOk()
+            .expectBody()
             .jsonPath("$.content.length()").isEqualTo(6)
             .jsonPath("$.content[0].youtubeId").isEqualTo("666")
             .jsonPath("$.content[3].youtubeId").isEqualTo("333")
@@ -66,8 +65,7 @@ public class VideoControllerTests extends BasicControllerTests {
         VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 
         saveVideo(videoSaveRequestDto, getDefaultLoginSessionId())
-            .expectStatus()
-            .isCreated()
+            .expectStatus().isCreated()
             .expectBody()
             .jsonPath("$.id").isNotEmpty()
             .jsonPath("$.youtubeId").isEqualTo(DEFAULT_VIDEO_YOUTUBEID)
@@ -112,8 +110,7 @@ public class VideoControllerTests extends BasicControllerTests {
         VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 
         String returnUrl = saveVideo(videoSaveRequestDto, jsessionid)
-            .expectStatus()
-            .isCreated()
+            .expectStatus().isCreated()
             .expectBody()
             .returnResult()
             .getResponseHeaders()
@@ -129,8 +126,7 @@ public class VideoControllerTests extends BasicControllerTests {
         VideoUpdateRequestDto videoUpdateRequestDto = new VideoUpdateRequestDto(youtubeId, title, contetns);
 
         updateVideo(id, videoUpdateRequestDto, jsessionid)
-            .expectStatus()
-            .isOk()
+            .expectStatus().isOk()
             .expectHeader()
             .valueMatches("location", returnUrl)
             .expectBody()

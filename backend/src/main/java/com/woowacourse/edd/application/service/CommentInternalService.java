@@ -30,6 +30,7 @@ public class CommentInternalService {
         return commentRepository.findCommentsByVideo_Id(videoId);
     }
 
+    @Transactional(readOnly = true)
     public Comment findById(Long id) {
         return commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
     }
@@ -39,7 +40,6 @@ public class CommentInternalService {
         comment.update(commentRequestDto.getContents(), userId, videoId);
         return comment;
     }
-
 
     public void delete(Long commentId, Long userId, Long videoId) {
         Comment comment = findById(commentId);

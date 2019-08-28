@@ -82,6 +82,10 @@ public class Video {
         this.contents = contents;
     }
 
+    public boolean isNotMatch(Long videoId) {
+        return id != videoId;
+    }
+
     public Long getId() {
         return id;
     }
@@ -116,9 +120,5 @@ public class Video {
             ", createDate=" + createDate +
             ", creator=" + creator +
             '}';
-    }
-
-    public boolean isNotMatch(Long videoId) {
-        return id != videoId;
     }
 }

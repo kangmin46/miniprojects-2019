@@ -12,11 +12,11 @@ import static com.woowacourse.edd.exceptions.CommentNotFoundException.COMMENT_NO
 import static com.woowacourse.edd.exceptions.InvalidAccessException.INVALID_ACCESS_MESSAGE;
 import static com.woowacourse.edd.exceptions.InvalidContentsException.INVALID_CONTENTS_MESSAGE;
 import static com.woowacourse.edd.exceptions.UnauthorizedAccessException.UNAUTHORIZED_ACCESS_MESSAGE;
-import static com.woowacourse.edd.presentation.controller.CommentController.COMMENT_URL;
 import static com.woowacourse.edd.presentation.controller.VideoController.VIDEO_URL;
 
 public class CommentControllerTests extends BasicControllerTests {
 
+    private static final String COMMENT_URL = "/comments";
     private static final String DEFAULT_CONTENTS = "contents";
     private String cookie;
 
@@ -30,8 +30,7 @@ public class CommentControllerTests extends BasicControllerTests {
     void save() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(DEFAULT_CONTENTS);
         saveComment(DEFAULT_VIDEO_ID, commentRequestDto)
-            .expectStatus()
-            .isCreated()
+            .expectStatus().isCreated()
             .expectHeader()
             .exists("location")
             .expectBody()
@@ -50,10 +49,8 @@ public class CommentControllerTests extends BasicControllerTests {
 
     @Test
     void retrieveComments() {
-
         getComments(DEFAULT_VIDEO_ID)
-            .expectStatus()
-            .isOk()
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$[0].id").isEqualTo(1L)
             .jsonPath("$[0].contents").isEqualTo("contents")
@@ -65,8 +62,7 @@ public class CommentControllerTests extends BasicControllerTests {
     @Test
     void retrieveComments_invalid_videoId() {
         getComments(100L)
-            .expectStatus()
-            .isOk()
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$.length()").isEqualTo(0L);
     }
@@ -80,8 +76,7 @@ public class CommentControllerTests extends BasicControllerTests {
 
         CommentRequestDto updateCommentRequestDto = new CommentRequestDto(updateContents);
         updateComment(returnUrl, updateCommentRequestDto)
-            .expectStatus()
-            .isOk()
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$.id").isNotEmpty()
             .jsonPath("$.contents").isEqualTo(updateContents)

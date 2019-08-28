@@ -9,5 +9,4 @@ public class DomainBasicTests {
     protected static Stream<String> invalidStrings() {
         return Stream.of(EMPTY, BLANK, null);
     }
-
 }

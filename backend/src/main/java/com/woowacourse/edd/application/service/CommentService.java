@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class CommentService {
 
-    private VideoInternalService videoInternalService;
-    private CommentInternalService commentInternalService;
-    private UserInternalService userInternalService;
+    private final VideoInternalService videoInternalService;
+    private final CommentInternalService commentInternalService;
+    private final UserInternalService userInternalService;
 
     @Autowired
     public CommentService(VideoInternalService videoInternalService, CommentInternalService commentInternalService, UserInternalService userInternalService) {
@@ -35,6 +35,7 @@ public class CommentService {
         return CommentConverter.toResponse(comment);
     }
 
+    @Transactional(readOnly = true)
     public List<CommentResponse> retrieve(Long videoId) {
         List<Comment> comments = commentInternalService.retrieve(videoId);
         return comments.stream()

@@ -34,8 +34,7 @@ public class BasicControllerTests {
 
     protected void assertFailBadRequest(WebTestClient.ResponseSpec responseSpec, String errorMessage) {
         WebTestClient.BodyContentSpec bodyContentSpec = responseSpec
-            .expectStatus()
-            .isBadRequest()
+            .expectStatus().isBadRequest()
             .expectBody();
 
         checkErrorResponse(bodyContentSpec, errorMessage);
@@ -43,8 +42,7 @@ public class BasicControllerTests {
 
     protected void assertFailNotFound(WebTestClient.ResponseSpec responseSpecs, String errorMessage) {
         WebTestClient.BodyContentSpec bodyContentSpec = responseSpecs
-            .expectStatus()
-            .isNotFound()
+            .expectStatus().isNotFound()
             .expectBody();
 
         checkErrorResponse(bodyContentSpec, errorMessage);
@@ -52,8 +50,7 @@ public class BasicControllerTests {
 
     protected void assertFailForbidden(WebTestClient.ResponseSpec responseSpec, String errorMessage) {
         WebTestClient.BodyContentSpec bodyContentSpec = responseSpec
-            .expectStatus()
-            .isForbidden()
+            .expectStatus().isForbidden()
             .expectBody();
 
         checkErrorResponse(bodyContentSpec, errorMessage);
@@ -61,8 +58,7 @@ public class BasicControllerTests {
 
     protected void assertFailUnauthorized(WebTestClient.ResponseSpec responseSpec, String errorMessage) {
         WebTestClient.BodyContentSpec bodyContentSpec = responseSpec
-            .expectStatus()
-            .isUnauthorized()
+            .expectStatus().isUnauthorized()
             .expectBody();
 
         checkErrorResponse(bodyContentSpec, errorMessage);
@@ -94,8 +90,7 @@ public class BasicControllerTests {
             .uri(USER_URL)
             .body(Mono.just(userSaveRequestDto), UserSaveRequestDto.class)
             .exchange()
-            .expectStatus()
-            .isCreated()
+            .expectStatus().isCreated()
             .expectHeader().valueMatches("Location", USER_URL + "/\\d+")
             .expectBody()
             .returnResult();

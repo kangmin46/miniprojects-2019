@@ -39,8 +39,7 @@ public class UserControllerTests extends BasicControllerTests {
         UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("robby", "shit@email.com", "P@ssW0rd");
 
         findUser(getUrl(signUp(userSaveRequestDto)))
-            .expectStatus()
-            .isOk()
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$.name").isEqualTo("robby")
             .jsonPath("$.email").isEqualTo("shit@email.com");
@@ -56,8 +55,7 @@ public class UserControllerTests extends BasicControllerTests {
         UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto("jm", "hansome@gmail.com");
 
         updateUser(userUpdateRequestDto, url, sid)
-            .expectStatus()
-            .isOk()
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$.name").isEqualTo(userUpdateRequestDto.getName())
             .jsonPath("$.email").isEqualTo(userUpdateRequestDto.getEmail());
@@ -75,24 +73,22 @@ public class UserControllerTests extends BasicControllerTests {
         LoginRequestDto loginRequestDto = new LoginRequestDto("conas@naver.com", "p@ssW0rd");
         String sid = getLoginCookie(loginRequestDto);
 
-        updateUser(unauthorizedUpdateRequest, url, sid).expectStatus()
-            .isForbidden();
+        updateUser(unauthorizedUpdateRequest, url, sid)
+            .expectStatus().isForbidden();
     }
 
     @Test
     @DisplayName("가입되지 않은 유저가 가입되지 않은 유저 삭제를 시도할 때")
     void no_signin_delete_no_signin_user() {
         deleteUser(USER_URL + "/999", null)
-            .expectStatus()
-            .isUnauthorized();
+            .expectStatus().isUnauthorized();
     }
 
     @Test
     @DisplayName("가입되지 않은 유저가 가입된 유저 삭제를 시도할 때")
     void no_sigin_delete_user() {
         deleteUser(USER_URL + "/1", null)
-            .expectStatus()
-            .isUnauthorized();
+            .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -103,8 +99,7 @@ public class UserControllerTests extends BasicControllerTests {
         String url = getUrl(signUp(userSaveRequestDto));
         String sid = getLoginCookie(loginRequestDto);
         deleteUser(url, sid)
-            .expectStatus()
-            .isNoContent();
+            .expectStatus().isNoContent();
     }
 
     @Test
@@ -118,8 +113,7 @@ public class UserControllerTests extends BasicControllerTests {
 
         String sid = getLoginCookie(loginRequestDto);
         deleteUser(authorizedUserUrl, sid)
-            .expectStatus()
-            .isForbidden();
+            .expectStatus().isForbidden();
     }
 
     @Test
@@ -129,8 +123,8 @@ public class UserControllerTests extends BasicControllerTests {
 
     @Test
     void find_by_id() {
-        findUser(USER_URL + "/1").expectStatus()
-            .isOk();
+        findUser(USER_URL + "/1")
+            .expectStatus().isOk();
     }
 
     private WebTestClient.ResponseSpec assertRequestValidation(UserSaveRequestDto userSaveRequestDto) {

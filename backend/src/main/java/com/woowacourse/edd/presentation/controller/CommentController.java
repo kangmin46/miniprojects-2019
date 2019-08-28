@@ -12,18 +12,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.net.URI;
 import java.util.List;
 
+import static com.woowacourse.edd.presentation.controller.CommentController.COMMENT_URL;
 import static com.woowacourse.edd.presentation.controller.VideoController.VIDEO_URL;
 
 @RestController
+@RequestMapping(COMMENT_URL)
 public class CommentController {
 
-    static final String COMMENT_URL = "/comments";
+    public static final String COMMENT_URL = VIDEO_URL + "/{videoId}/comments";
     private CommentService commentService;
 
     @Autowired
@@ -31,29 +34,29 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping(VIDEO_URL + "/{videoId}" + COMMENT_URL)
+    @PostMapping
     public ResponseEntity save(@PathVariable Long videoId, @RequestBody CommentRequestDto commentRequestDto, HttpSession session) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("user");
         CommentResponse commentResponse = commentService.save(videoId, sessionUser.getId(), commentRequestDto);
-        return ResponseEntity.created(URI.create(VIDEO_URL + "/" + videoId + COMMENT_URL + "/" + commentResponse.getId())).body(commentResponse);
+        return ResponseEntity.created(URI.create(VIDEO_URL + "/" + videoId + "/comments/" + commentResponse.getId())).body(commentResponse);
     }
 
-    @GetMapping(VIDEO_URL + "/{videoId}" + COMMENT_URL)
+    @GetMapping
     public ResponseEntity<List<CommentResponse>> retrieve(@PathVariable Long videoId) {
         List<CommentResponse> commentResponses = commentService.retrieve(videoId);
         return ResponseEntity.ok(commentResponses);
     }
 
-    @PutMapping(VIDEO_URL + "/{videoId}" + COMMENT_URL + "/{commentId}")
-    public ResponseEntity<CommentResponse> update(@PathVariable("videoId") Long videoId, @PathVariable("commentId") Long commentId,
+    @PutMapping("/{commentId}")
+    public ResponseEntity<CommentResponse> update(@PathVariable Long videoId, @PathVariable Long commentId,
                                                   @RequestBody CommentRequestDto commentRequestDto, HttpSession session) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("user");
         CommentResponse commentResponse = commentService.update(commentId, sessionUser.getId(), videoId, commentRequestDto);
         return ResponseEntity.ok(commentResponse);
     }
 
-    @DeleteMapping(VIDEO_URL + "/{videoId}" + COMMENT_URL + "/{commentId}")
-    public ResponseEntity delete(@PathVariable("videoId") Long videoId, @PathVariable("commentId") Long commentId,
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity delete(@PathVariable Long videoId, @PathVariable Long commentId,
                                  HttpSession session) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("user");
         commentService.delete(commentId, sessionUser.getId(), videoId);
