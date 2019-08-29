@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 import static com.woowacourse.edd.application.dto.UserSaveRequestDto.INVALID_EMAIL_MESSAGE;
 import static com.woowacourse.edd.application.dto.UserSaveRequestDto.INVALID_NAME_MESSAGE;
 import static com.woowacourse.edd.application.dto.UserSaveRequestDto.INVALID_PASSWORD_MESSAGE;
+import static com.woowacourse.edd.exceptions.DuplicateEmailSignUpException.DUPLICATE_EMAIL_SIGNUP_MESSAGE;
 import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
 
 public class UserControllerTests extends BasicControllerTests {
@@ -59,6 +60,17 @@ public class UserControllerTests extends BasicControllerTests {
             .expectBody()
             .jsonPath("$.name").isEqualTo(userUpdateRequestDto.getName())
             .jsonPath("$.email").isEqualTo(userUpdateRequestDto.getEmail());
+    }
+
+    @Test
+    @DisplayName("이미 존재하는 이메일로 가입을 시도할 때")
+    void duplicate_email_signup() {
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto(DEFAULT_LOGIN_NAME, DEFAULT_LOGIN_EMAIL,DEFAULT_LOGIN_PASSWORD);
+        WebTestClient.ResponseSpec responseSpec = executePost(USER_URL)
+            .body(Mono.just(userSaveRequestDto), UserSaveRequestDto.class)
+            .exchange();
+
+        assertFailBadRequest(responseSpec,DUPLICATE_EMAIL_SIGNUP_MESSAGE);
     }
 
     @Test
