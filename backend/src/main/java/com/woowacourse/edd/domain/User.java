@@ -1,5 +1,7 @@
 package com.woowacourse.edd.domain;
 
+import com.woowacourse.edd.exceptions.InvalidEmailException;
+import com.woowacourse.edd.exceptions.InvalidTitleException;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
@@ -10,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Where(clause = "is_deleted = 'false'")
@@ -43,10 +46,17 @@ public class User {
     }
 
     public User(String name, String email, String password) {
+        checkEmail(email);
         this.name = name;
         this.email = email;
         this.password = password;
         this.isDeleted = false;
+    }
+
+    private void checkEmail(String email) {
+        if (Objects.isNull(email) || email.trim().isEmpty()) {
+            throw new InvalidEmailException();
+        }
     }
 
     public void update(String name, String email) {

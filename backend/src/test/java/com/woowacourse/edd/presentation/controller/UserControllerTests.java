@@ -74,6 +74,17 @@ public class UserControllerTests extends BasicControllerTests {
     }
 
     @Test
+    @DisplayName("공백으로 이메일가입을 시도할 때")
+    void blank_email_signup() {
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto(DEFAULT_LOGIN_NAME, " ",DEFAULT_LOGIN_PASSWORD);
+        WebTestClient.ResponseSpec responseSpec = executePost(USER_URL)
+            .body(Mono.just(userSaveRequestDto), UserSaveRequestDto.class)
+            .exchange();
+
+        assertFailBadRequest(responseSpec,INVALID_EMAIL_MESSAGE);
+    }
+
+    @Test
     @DisplayName("가입된 유저가 다른 유저의 수정을 시도할 때")
     void unauthorized_user_update() {
         UserSaveRequestDto authorizedUser = new UserSaveRequestDto("Jmm", "jm@naver.com", "p@ssW0rd");
