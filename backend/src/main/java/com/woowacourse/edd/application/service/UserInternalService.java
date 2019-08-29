@@ -26,10 +26,15 @@ class UserInternalService {
     }
 
     public User save(User user) {
+        checkEmailDuplication(user);
+        return userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public void checkEmailDuplication(User user) {
         if(userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new DuplicateEmailSignUpException();
         }
-        return userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
