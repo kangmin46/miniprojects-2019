@@ -39,7 +39,7 @@ public class User {
     @Column(nullable = false, name = "is_deleted")
     private boolean isDeleted;
 
-    public User() {
+    protected User() {
     }
 
     public User(String name, String email, String password) {
@@ -72,5 +72,9 @@ public class User {
 
     public boolean isNotMatchPassword(String password) {
         return !this.password.equals(password);
+    }
+
+    public boolean isNotMatch(Long userId) {
+        return id != userId;
     }
 }

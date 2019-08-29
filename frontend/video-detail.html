@@ -2,6 +2,7 @@
 <html>
 
 <head>
+        <meta charset="utf-8">
     <script src="./js/headTemplate.js"></script>
 
     <link rel="stylesheet" href="./css/app.css">
@@ -14,65 +15,6 @@
         <div class="header-wrapper"></div>
         <div class="side-nav mrg-top-60">
             <div class="side-nav-inner">
-                <ul class="side-nav-menu overflow-y-auto">
-                    <li class="nav-item">
-                        <a class="mrg-top-30" href="/">
-                            <span class="icon-holder">
-                                <i class="material-icons">home</i>
-                            </span>
-                            <span class="title relative bottom-5">홈</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="/">
-                            <span class="icon-holder">
-                                <i class="material-icons">hearing</i>
-                            </span>
-                            <span class="title relative bottom-5">인기</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="/">
-                            <span class="icon-holder">
-                                <i class="material-icons">subscriptions</i>
-                            </span>
-                            <span class="title relative bottom-5">구독</span>
-                        </a>
-                    </li>
-                    <hr>
-                    <li class="nav-item">
-                        <a class="" href="/">
-                            <span class="icon-holder">
-                                <i class="material-icons">folder</i>
-                            </span>
-                            <span class="title relative bottom-5">라이브러리</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="/">
-                            <span class="icon-holder">
-                                <i class="material-icons">restore</i>
-                            </span>
-                            <span class="title relative bottom-5">최근 본 동영상</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="/">
-                            <span class="icon-holder">
-                                <i class="material-icons">access_time</i>
-                            </span>
-                            <span class="title relative bottom-5">나중에 볼 동영상</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="/">
-                            <span class="icon-holder">
-                                <i class="material-icons">thumb_up</i>
-                            </span>
-                            <span class="title relative bottom-5">좋아요 표시한 동영상</span>
-                        </a>
-                    </li>
-                </ul>
             </div>
         </div>
 
@@ -91,32 +33,18 @@
                                         <span class="font-size-16 text-info">2</span>
                                     </div>
                                     <div class="comment">
-                                        <ul class="list-unstyled list-info">
-                                            <li class="comment-item border bottom mrg-btm-30">
-                                                <img class="thumb-img img-circle"
-                                                    src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                                                <div class="info">
-                                                    <span href="" class="text-bold inline-block">Jun</span>
-                                                    <p class="width-80">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을
-                                                        진행하도록 설계했다. 교육자로 살다 보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만
-                                                        시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄 수 있는 계기가 되었다.</p>
-                                                </div>
-                                            </li>
-    
-                                            <li class="comment-item border bottom mrg-btm-30">
-                                                <img class="thumb-img img-circle"
-                                                    src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
-                                                <div class="info">
-                                                    <span href="" class="text-bold inline-block">Jun</span>
-                                                    <p class="width-80">브라운 멋져</p>
-                                                </div>
-                                            </li>
-    
+                                        <ul class="list-unstyled list-info" id="comment-section">
+                                           
                                         </ul>
                                         <div class="add-comment">
                                             <div id="editSection"></div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div id="add-comment-section">
+                                    <input type="text" id="comment-input">
+                                    <button type="button" id="save-comment-btn" class="btn btn-danger">저장</button>
                                 </div>
                             </div>
                         </div>
@@ -134,12 +62,15 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
         integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/locale/ko.js"></script>
 
     <script src="./js/common.js"></script>
     <script src="./js/headerTemplate.js"></script>
     <script src="./js/video/videodetailtemplate.js"></script>
     <script src="./js/sideNav.js"></script>
     <script src="./js/video/detail.js"></script>
+    <script src="./js/video/comment.js"></script>
 </body>
 
 </html>

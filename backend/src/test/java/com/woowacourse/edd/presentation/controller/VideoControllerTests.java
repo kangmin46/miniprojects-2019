@@ -4,15 +4,16 @@ import com.woowacourse.edd.application.dto.LoginRequestDto;
 import com.woowacourse.edd.application.dto.UserSaveRequestDto;
 import com.woowacourse.edd.application.dto.VideoSaveRequestDto;
 import com.woowacourse.edd.application.dto.VideoUpdateRequestDto;
-import com.woowacourse.edd.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
-import org.springframework.test.web.reactive.server.StatusAssertions;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.stream.IntStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class VideoControllerTests extends BasicControllerTests {
 
@@ -21,16 +22,18 @@ public class VideoControllerTests extends BasicControllerTests {
     private final String DEFAULT_VIDEO_CONTENTS = "내용";
     private final String VIDEOS_URI = "/v1/videos";
     private final LocalDateTime DEFAULT_VIDEO_DATETIME = LocalDateTime.of(2019, 5, 5, 15, 31, 23);
+    private final int DEFAULT_VIDEO_VIEW_COUNT = 100;
 
     @Test
     void find_video_by_id() {
-        findVideo("/" + DEFAULT_VIDEO_ID).isOk()
+        findVideo("/" + DEFAULT_VIDEO_ID)
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$.id").isNotEmpty()
             .jsonPath("$.youtubeId").isEqualTo(DEFAULT_VIDEO_YOUTUBEID)
             .jsonPath("$.title").isEqualTo(DEFAULT_VIDEO_TITLE)
             .jsonPath("$.contents").isEqualTo(DEFAULT_VIDEO_CONTENTS)
-            .jsonPath("$.createDate").isEqualTo(Utils.getFormedDate(DEFAULT_VIDEO_DATETIME))
+            .jsonPath("$.viewCount").isEqualTo(DEFAULT_VIDEO_VIEW_COUNT + 1)
             .jsonPath("$.creator.id").isEqualTo(DEFAULT_VIDEO_ID)
             .jsonPath("$.creator.name").isEqualTo(DEFAULT_LOGIN_NAME);
     }
@@ -43,19 +46,23 @@ public class VideoControllerTests extends BasicControllerTests {
     @Test
     void find_videos_by_date() {
         String jsessionid = getDefaultLoginSessionId();
-        saveVideo(new VideoSaveRequestDto("111", "tilte1", "contents1"), jsessionid);
-        saveVideo(new VideoSaveRequestDto("222", "tilte2", "contents2"), jsessionid);
-        saveVideo(new VideoSaveRequestDto("333", "tilte3", "contents3"), jsessionid);
-        saveVideo(new VideoSaveRequestDto("444", "tilte4", "contents4"), jsessionid);
-        saveVideo(new VideoSaveRequestDto("555", "tilte5", "contents5"), jsessionid);
-        saveVideo(new VideoSaveRequestDto("666", "tilte6", "contents6"), jsessionid);
 
-        findVideos(0, 6, "createDate", "DESC").isOk().expectBody()
-            .jsonPath("$.content.length()").isEqualTo(6)
-            .jsonPath("$.content[0].youtubeId").isEqualTo("666")
-            .jsonPath("$.content[3].youtubeId").isEqualTo("333")
-            .jsonPath("$.content[5].youtubeId").isEqualTo("111")
-            .jsonPath("$.content[5].creator.id").isEqualTo(DEFAULT_LOGIN_ID);
+        saveVideo(new VideoSaveRequestDto("111", "title1", "contents1"), jsessionid);
+        saveVideo(new VideoSaveRequestDto("222", "title2", "contents2"), jsessionid);
+        saveVideo(new VideoSaveRequestDto("333", "title2", "contents3"), jsessionid);
+        saveVideo(new VideoSaveRequestDto("444", "title4", "contents4"), jsessionid);
+        saveVideo(new VideoSaveRequestDto("555", "title5", "contents5"), jsessionid);
+        saveVideo(new VideoSaveRequestDto("666", "title6", "contents6"), jsessionid);
+
+        PageRequestContentDto response = findVideos(0, 6, "createDate", "DESC")
+            .expectStatus().isOk()
+            .expectBody(PageRequestContentDto.class).returnResult().getResponseBody();
+
+        IntStream.range(0, response.getContent().size() - 1)
+            .forEach(i -> {
+                assertThat(LocalDateTime.parse((String) response.getContent().get(i).get("createDate")))
+                    .isAfter(LocalDateTime.parse((String) response.getContent().get(i + 1).get("createDate")));
+            });
     }
 
     @Test
@@ -77,7 +84,7 @@ public class VideoControllerTests extends BasicControllerTests {
         saveVideo(secondVideoSaveRequestDto, cookie);
 
         findVideo("/creators/" + userId)
-            .isOk()
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$.length()").isEqualTo(2)
             .jsonPath("$[0].creator.id").isEqualTo(userId)
@@ -92,13 +99,13 @@ public class VideoControllerTests extends BasicControllerTests {
     void save() {
         VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 
-        saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()).isCreated()
+        saveVideo(videoSaveRequestDto, getDefaultLoginSessionId())
+            .expectStatus().isCreated()
             .expectBody()
             .jsonPath("$.id").isNotEmpty()
             .jsonPath("$.youtubeId").isEqualTo(DEFAULT_VIDEO_YOUTUBEID)
             .jsonPath("$.title").isEqualTo(DEFAULT_VIDEO_TITLE)
             .jsonPath("$.contents").isEqualTo(DEFAULT_VIDEO_CONTENTS)
-            .jsonPath("$.createDate").isEqualTo(Utils.getFormedDate(LocalDateTime.now(ZoneId.of("UTC"))))
             .jsonPath("$.creator.id").isEqualTo(DEFAULT_LOGIN_ID)
             .jsonPath("$.creator.name").isEqualTo(DEFAULT_LOGIN_NAME);
     }
@@ -119,7 +126,6 @@ public class VideoControllerTests extends BasicControllerTests {
         VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, title, DEFAULT_VIDEO_CONTENTS);
 
         assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), "제목은 한 글자 이상이어야합니다");
-
     }
 
     @Test
@@ -133,22 +139,31 @@ public class VideoControllerTests extends BasicControllerTests {
 
     @Test
     void update() {
-        save();
+        String jsessionid = getDefaultLoginSessionId();
+        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 
-        Long id = 2L;
+        String returnUrl = saveVideo(videoSaveRequestDto, jsessionid)
+            .expectStatus().isCreated()
+            .expectBody()
+            .returnResult()
+            .getResponseHeaders()
+            .getLocation()
+            .toASCIIString();
+
+        String[] urls = returnUrl.split("/");
+        Long id = Long.valueOf(urls[urls.length - 1]);
         String youtubeId = "updateYoutubeId";
         String title = "updateTitle";
         String contetns = "updateContents";
 
         VideoUpdateRequestDto videoUpdateRequestDto = new VideoUpdateRequestDto(youtubeId, title, contetns);
 
-        updateVideo(id, videoUpdateRequestDto, getDefaultLoginSessionId())
-            .isOk()
+        updateVideo(id, videoUpdateRequestDto, jsessionid)
+            .expectStatus().isOk()
             .expectHeader()
-            .valueMatches("location", VIDEOS_URI + "/" + id)
+            .valueMatches("location", returnUrl)
             .expectBody()
             .jsonPath("$.id").isEqualTo(id);
-
     }
 
     @Test
@@ -161,15 +176,39 @@ public class VideoControllerTests extends BasicControllerTests {
     }
 
     @Test
+    void update_view_count() {
+        String sid = getDefaultLoginSessionId();
+        String location = saveVideo(new VideoSaveRequestDto("abcdefg", "videos", "good video"), sid)
+            .expectStatus().isCreated()
+            .expectBody().returnResult().getResponseHeaders().getLocation().toASCIIString();
+
+        webTestClient.get().uri(location)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .jsonPath("$.viewCount").isEqualTo(1)
+            .consumeWith(res -> {
+                webTestClient.get().uri(location)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.viewCount").isEqualTo(2);
+            });
+    }
+
+    @Test
     void delete() {
         EntityExchangeResult<byte[]> res = saveVideo(new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS), getDefaultLoginSessionId())
+            .expectStatus()
             .isCreated()
             .expectBody()
             .returnResult();
 
         String[] id = res.getResponseHeaders().getLocation().toASCIIString().split("/");
 
-        deleteVideo(Long.valueOf(id[id.length - 1]), getDefaultLoginSessionId()).isNoContent();
+        deleteVideo(Long.valueOf(id[id.length - 1]), getDefaultLoginSessionId())
+            .expectStatus()
+            .isNoContent();
     }
 
     @Test
@@ -177,13 +216,12 @@ public class VideoControllerTests extends BasicControllerTests {
         assertFailNotFound(deleteVideo(100L, getDefaultLoginSessionId()), "그런 비디오는 존재하지 않아!");
     }
 
-    private StatusAssertions findVideo(String uri) {
+    private WebTestClient.ResponseSpec findVideo(String uri) {
         return executeGet(VIDEOS_URI + uri)
-            .exchange()
-            .expectStatus();
+            .exchange();
     }
 
-    private StatusAssertions findVideos(int page, int size, String sort, String direction) {
+    private WebTestClient.ResponseSpec findVideos(int page, int size, String sort, String direction) {
         UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
         builder.path(VIDEOS_URI)
             .query("page=" + page)
@@ -191,30 +229,32 @@ public class VideoControllerTests extends BasicControllerTests {
             .query("sort=" + sort + "," + direction);
         String uri = builder.build().toUriString();
         return executeGet(uri)
-            .exchange()
-            .expectStatus();
+            .exchange();
     }
 
-    private StatusAssertions saveVideo(VideoSaveRequestDto videoSaveRequestDto, String jsessionid) {
+    private WebTestClient.ResponseSpec saveVideo(VideoSaveRequestDto videoSaveRequestDto, String jsessionid) {
         return executePost(VIDEOS_URI)
             .cookie(COOKIE_JSESSIONID, jsessionid)
             .body(Mono.just(videoSaveRequestDto), VideoSaveRequestDto.class)
-            .exchange()
-            .expectStatus();
+            .exchange();
     }
 
-    private StatusAssertions updateVideo(Long id, VideoUpdateRequestDto videoUpdateRequestDto, String jsessionid) {
+    private WebTestClient.ResponseSpec updateVideo(Long id, VideoUpdateRequestDto videoUpdateRequestDto, String jsessionid) {
         return executePut(VIDEOS_URI + "/" + id)
             .cookie(COOKIE_JSESSIONID, jsessionid)
             .body(Mono.just(videoUpdateRequestDto), VideoUpdateRequestDto.class)
-            .exchange()
-            .expectStatus();
+            .exchange();
     }
 
-    private StatusAssertions deleteVideo(Long id, String jsessionid) {
+    private WebTestClient.ResponseSpec deleteVideo(Long id, String jsessionid) {
         return executeDelete(VIDEOS_URI + "/" + id)
             .cookie(COOKIE_JSESSIONID, jsessionid)
-            .exchange()
-            .expectStatus();
+            .exchange();
+    }
+
+    private WebTestClient.BodyContentSpec saveNextVideo(VideoSaveRequestDto video, String sid) {
+        return saveVideo(video, sid)
+            .expectStatus().isCreated()
+            .expectBody();
     }
 }
