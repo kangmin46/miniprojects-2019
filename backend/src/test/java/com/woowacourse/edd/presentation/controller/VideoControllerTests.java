@@ -91,8 +91,6 @@ public class VideoControllerTests extends BasicControllerTests {
             .jsonPath("$[1].creator.id").isEqualTo(userId)
             .jsonPath("$[0].title").isEqualTo("newtitle")
             .jsonPath("$[1].title").isEqualTo("secondtitle");
-
-
     }
 
     @Test
