@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
-import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
@@ -22,9 +21,10 @@ public class BasicControllerTests {
     protected static final String DEFAULT_LOGIN_EMAIL = "kangmin789@naver.com";
     protected static final String DEFAULT_LOGIN_PASSWORD = "P@ssW0rd";
     protected static final String COOKIE_JSESSIONID = "JSESSIONID";
-
+    protected static final String DEFAULT_VIDEO_YOUTUBEID = "S8e1geEpnTA";
     protected static final Long DEFAULT_VIDEO_ID = 1L;
-
+    protected final String DEFAULT_VIDEO_TITLE = "제목";
+    protected final String DEFAULT_VIDEO_CONTENTS = "내용";
     @Autowired
     protected WebTestClient webTestClient;
 

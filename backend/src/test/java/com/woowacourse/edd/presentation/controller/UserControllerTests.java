@@ -117,8 +117,17 @@ public class UserControllerTests extends BasicControllerTests {
     }
 
     @Test
-    @DisplayName("가입된 유저가 탈퇴한 유저의 정보를 조회할 때")
-    void user_() {
+    void find_videos() {
+        executeGet(USER_URL + "/" + DEFAULT_LOGIN_ID + "/videos")
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .jsonPath("$[0].id").isNotEmpty()
+            .jsonPath("$[0].youtubeId").isEqualTo(DEFAULT_VIDEO_YOUTUBEID)
+            .jsonPath("$[0].title").isEqualTo(DEFAULT_VIDEO_TITLE)
+            .jsonPath("$[0].createDate").isNotEmpty()
+            .jsonPath("$[0].creator.id").isNotEmpty()
+            .jsonPath("$[0].creator.name").isEqualTo(DEFAULT_LOGIN_NAME);
     }
 
     @Test

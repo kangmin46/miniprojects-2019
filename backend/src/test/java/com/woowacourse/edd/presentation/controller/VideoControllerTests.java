@@ -13,11 +13,10 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
+
 public class VideoControllerTests extends BasicControllerTests {
 
-    private final String DEFAULT_VIDEO_YOUTUBEID = "S8e1geEpnTA";
-    private final String DEFAULT_VIDEO_TITLE = "제목";
-    private final String DEFAULT_VIDEO_CONTENTS = "내용";
     private final String VIDEOS_URI = "/v1/videos";
     private final LocalDateTime DEFAULT_VIDEO_DATETIME = LocalDateTime.of(2019, 5, 5, 15, 31, 23);
     private final int DEFAULT_VIDEO_VIEW_COUNT = 100;
@@ -63,6 +62,21 @@ public class VideoControllerTests extends BasicControllerTests {
             .jsonPath("$.content[5].youtubeId").isEqualTo("111")
             .jsonPath("$.content[5].creator.id").isEqualTo(DEFAULT_LOGIN_ID);
     }
+//
+//    @Test
+//    void find_videos_by_user() {
+//        executeGet("/videos/users/1")
+//            .exchange()
+//            .expectStatus()
+//            .isOk()
+//            .expectBody()
+//            .jsonPath("$[0].id").isNotEmpty()
+//            .jsonPath("$[0].youtubeId").isEqualTo(DEFAULT_VIDEO_YOUTUBEID)
+//            .jsonPath("$[0].title").isEqualTo(DEFAULT_VIDEO_TITLE)
+//            .jsonPath("$[0].createDate").isNotEmpty()
+//            .jsonPath("$[0].creator.id").isNotEmpty()
+//            .jsonPath("$[0].creator.name").isEqualTo(DEFAULT_LOGIN_NAME);
+//    }
 
     @Test
     void save() {
