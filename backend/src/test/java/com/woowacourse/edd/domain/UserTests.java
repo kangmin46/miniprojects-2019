@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class UserDomainTests extends BasicDomainTests {
+public class UserTests extends BasicDomainTests {
 
     @Test
     void create() {
