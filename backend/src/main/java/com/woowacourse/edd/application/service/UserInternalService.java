@@ -30,9 +30,8 @@ class UserInternalService {
         return userRepository.save(user);
     }
 
-    @Transactional(readOnly = true)
-    public void checkEmailDuplication(User user) {
-        if(userRepository.findByEmail(user.getEmail()).isPresent()) {
+    private void checkEmailDuplication(User user) {
+        if(userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateEmailSignUpException();
         }
     }

@@ -1,7 +1,8 @@
 package com.woowacourse.edd.domain;
 
-import com.woowacourse.edd.exceptions.InvalidEmailException;
-import com.woowacourse.edd.exceptions.InvalidTitleException;
+import com.woowacourse.edd.exceptions.InvalidUserEmailException;
+import com.woowacourse.edd.exceptions.InvalidUserNameException;
+import com.woowacourse.edd.exceptions.InvalidUserPasswordException;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
@@ -46,16 +47,30 @@ public class User {
     }
 
     public User(String name, String email, String password) {
+        checkName(name);
         checkEmail(email);
+        checkPassword(password);
         this.name = name;
         this.email = email;
         this.password = password;
         this.isDeleted = false;
     }
 
+    private void checkName(String name) {
+        if (Objects.isNull(name) || name.trim().isEmpty()) {
+            throw new InvalidUserNameException();
+        }
+    }
+
     private void checkEmail(String email) {
         if (Objects.isNull(email) || email.trim().isEmpty()) {
-            throw new InvalidEmailException();
+            throw new InvalidUserEmailException();
+        }
+    }
+
+    private void checkPassword(String password) {
+        if (Objects.isNull(password) || password.trim().isEmpty()) {
+            throw new InvalidUserPasswordException();
         }
     }
 
