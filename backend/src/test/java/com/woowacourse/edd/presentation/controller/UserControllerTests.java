@@ -9,7 +9,8 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import static com.woowacourse.edd.application.dto.UserSaveRequestDto.INVALID_EMAIL_MESSAGE;
+import static com.woowacourse.edd.application.dto.UserSaveRequestDto.INVALID_EMAIL_FORM_MESSAGE;
+import static com.woowacourse.edd.application.dto.UserSaveRequestDto.INVALID_EMAIL_SIZE_MESSAGE;
 import static com.woowacourse.edd.application.dto.UserSaveRequestDto.INVALID_NAME_MESSAGE;
 import static com.woowacourse.edd.application.dto.UserSaveRequestDto.INVALID_PASSWORD_CONFIRM_MESSAGE;
 import static com.woowacourse.edd.application.dto.UserSaveRequestDto.INVALID_PASSWORD_MESSAGE;
@@ -21,7 +22,7 @@ public class UserControllerTests extends BasicControllerTests {
     @Test
     void email_validation() {
         UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("robby", "asdadasdasd", "P@ssW0rd", "P@ssW0rd");
-        assertFailBadRequest(assertRequestValidation(userSaveRequestDto), INVALID_EMAIL_MESSAGE);
+        assertFailBadRequest(assertRequestValidation(userSaveRequestDto), INVALID_EMAIL_FORM_MESSAGE);
     }
 
     @Test
@@ -51,6 +52,26 @@ public class UserControllerTests extends BasicControllerTests {
             .expectBody()
             .jsonPath("$.name").isEqualTo("robby")
             .jsonPath("$.email").isEqualTo("shit@email.com");
+    }
+
+    @Test
+    void user_save_invalidSize() {
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("robby", getOverSizeString(256), "P@ssW0rd", "P@ssW0rd");
+        assertFailBadRequest(webTestClient.post()
+            .uri(USER_URL)
+            .body(Mono.just(userSaveRequestDto), UserSaveRequestDto.class)
+            .exchange(), INVALID_EMAIL_SIZE_MESSAGE);
+    }
+
+    @Test
+    void user_update_invalidSize() {
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("robby", "als5610@naver.com", "p@ssW0rd", "p@ssW0rd");
+        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto("robby", getOverSizeString(256));
+        LoginRequestDto loginRequestDto = new LoginRequestDto("als5610@naver.com","p@ssW0rd");
+
+        String redirectUrl = getUrl(signUp(userSaveRequestDto));
+        String cookie = getLoginCookie(loginRequestDto);
+        assertFailBadRequest(updateUser(userUpdateRequestDto,redirectUrl,cookie), INVALID_EMAIL_SIZE_MESSAGE);;
     }
 
     @Test
@@ -88,7 +109,7 @@ public class UserControllerTests extends BasicControllerTests {
             .body(Mono.just(userSaveRequestDto), UserSaveRequestDto.class)
             .exchange();
 
-        assertFailBadRequest(responseSpec, INVALID_EMAIL_MESSAGE);
+        assertFailBadRequest(responseSpec, INVALID_EMAIL_FORM_MESSAGE);
     }
 
     @Test

@@ -108,4 +108,15 @@ public class BasicControllerTests {
             .getFirst(COOKIE_JSESSIONID)
             .getValue();
     }
+
+    protected String getOverSizeString(int overSizeCount) {
+        String overSizeContents = "";
+
+        for (int i = 0; i < overSizeCount; i++) {
+            overSizeContents += "a";
+        }
+        return overSizeContents;
+    }
+
+
 }

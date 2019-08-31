@@ -112,11 +112,7 @@ public class VideoControllerTests extends BasicControllerTests {
 
     @Test
     void save_oversize_youtubeId() {
-        String overSizeYoutubeId = "";
-
-        for (int i = 0; i < 256; i++) {
-            overSizeYoutubeId += "a";
-        }
+        String overSizeYoutubeId = getOverSizeString(256);
         VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(overSizeYoutubeId, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 
         assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), OVER_SIZE_YOUTUBEID_MESSAGE);
@@ -124,11 +120,7 @@ public class VideoControllerTests extends BasicControllerTests {
 
     @Test
     void save_oversize_title() {
-        String oversizeTitle = "";
-
-        for (int i = 0; i < 81; i++) {
-            oversizeTitle += "a";
-        }
+        String oversizeTitle = getOverSizeString(81);
         VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, oversizeTitle, DEFAULT_VIDEO_CONTENTS);
 
         assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), OVER_SIZE_TITLE_MESSAGE);
@@ -136,15 +128,13 @@ public class VideoControllerTests extends BasicControllerTests {
 
     @Test
     void save_oversize_contents() {
-        String overSizeContents = "";
-
-        for (int i = 0; i < 256; i++) {
-            overSizeContents += "a";
-        }
+        String overSizeContents = getOverSizeString(256);
         VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, overSizeContents);
 
         assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), OVER_SIZE_CONTENTS_MESSAGE);
     }
+
+
 
     @Test
     void save_empty_title() {
