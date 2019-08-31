@@ -13,6 +13,9 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 
+import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_CONTENTS_MESSAGE;
+import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_TITLE_MESSAGE;
+import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_YOUTUBEID_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class VideoControllerTests extends BasicControllerTests {
@@ -108,12 +111,39 @@ public class VideoControllerTests extends BasicControllerTests {
     }
 
     @Test
-    void save_invalid_youtube_id() {
-        String youtubeId = null;
+    void save_oversize_youtubeId() {
+        String overSizeYoutubeId = "";
 
-        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(youtubeId, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
+        for (int i = 0; i < 256; i++) {
+            overSizeYoutubeId += "a";
+        }
+        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(overSizeYoutubeId, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 
-        assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), "유투브 아이디는 필수로 입력해야합니다.");
+        assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), OVER_SIZE_YOUTUBEID_MESSAGE);
+    }
+
+    @Test
+    void save_oversize_title() {
+        String oversizeTitle = "";
+
+        for (int i = 0; i < 81; i++) {
+            oversizeTitle += "a";
+        }
+        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, oversizeTitle, DEFAULT_VIDEO_CONTENTS);
+
+        assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), OVER_SIZE_TITLE_MESSAGE);
+    }
+
+    @Test
+    void save_oversize_contents() {
+        String overSizeContents = "";
+
+        for (int i = 0; i < 256; i++) {
+            overSizeContents += "a";
+        }
+        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, overSizeContents);
+
+        assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), OVER_SIZE_CONTENTS_MESSAGE);
     }
 
     @Test

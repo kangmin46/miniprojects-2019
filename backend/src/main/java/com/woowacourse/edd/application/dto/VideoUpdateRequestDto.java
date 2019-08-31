@@ -1,8 +1,14 @@
 package com.woowacourse.edd.application.dto;
 
+import javax.validation.constraints.Size;
+
 public class VideoUpdateRequestDto {
+
+    @Size(max = 255, message = "너무 긴 유튜브 아이디는 안됩니다.")
     private String youtubeId;
+    @Size(max = 80, message = "80자 이상의 제목은 안됩니다.")
     private String title;
+    @Size(max = 255, message =  "255자 이상의 글자는 안됩니다.")
     private String contents;
 
     private VideoUpdateRequestDto() {
