@@ -1,3 +1,5 @@
+moment.locale('ko')
+
 const wootubeCtx = {
     util: {
         getUrlParams: function (name, url) {
@@ -10,24 +12,8 @@ const wootubeCtx = {
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         },
         calculateDate: function (responseDate) {
-            const localResponseDate = moment.utc(responseDate,'YYYYMMDDHH').local().format('YYYYMMDDHH')
-            const videoDate = new Date(localResponseDate.substr(0, 4), localResponseDate.substr(4, 2), localResponseDate.substr(6, 2), localResponseDate.substr(8, 2))
-            const currentDate = new Date()
-            const yearDifference = currentDate.getFullYear() - videoDate.getFullYear()
-            const monthDifference = currentDate.getMonth() + 1 - videoDate.getMonth()
-            const dayDifference = currentDate.getDate() - videoDate.getDate()
-            const hourDifference = currentDate.getHours() - videoDate.getHours()
-            if (yearDifference != 0) {
-                return yearDifference + '년전'
-            } else if (monthDifference != 0) {
-                return monthDifference + '달전'
-            } else if (dayDifference != 0) {
-                return dayDifference + '일전'
-            } else if (hourDifference != 0) {
-                return hourDifference + '시간전'
-            } else {
-                return '방금전'
-            }
+            const localResponseDate = moment.utc(responseDate).local()
+            return localResponseDate.fromNow();
         }
     },
     constants : {
@@ -42,7 +28,7 @@ const Api = function () {
         'Content-Type': 'application/json'
     }
 
-    const baseUrl = '/api'
+    const baseUrl = 'http://localhost:8080'
 
     const request = (url, method, body) => {
         return fetch(url, {
@@ -60,13 +46,25 @@ const Api = function () {
             credentials: 'include'
         })
     }
+
+    const requestLike = (userId) => {
+        return requestWithoutBody(`${baseUrl}/v1/videos/${userId}/likes`, 'POST')
+    }
+
+    const requestLikeCount = (userId) => {
+        return requestWithoutBody(`${baseUrl}/v1/videos/${userId}/likes`, 'GET')
+    }
+
+    const requestDisLike = (userId) => {
+        return requestWithoutBody(`${baseUrl}/v1/videos/${userId}/likes`, 'DELETE')
+    }
     
     const requestVideos = (page, size, sort) => {
         return requestWithoutBody(`${baseUrl}/v1/videos?page=${page}&size=${size}&sort=${sort},DESC`,'GET')
     }
 
     const requestMyChannelVideos = (userId) => {
-        return requestWithoutBody(`${baseUrl}/v1/users/${userId}/videos`,'GET')
+        return requestWithoutBody(`${baseUrl}/v1/videos/creators/${userId}`,'GET')
     }
 
     const requestVideo = (videoId) => {
@@ -97,6 +95,22 @@ const Api = function () {
         return request(`${baseUrl}/v1/users`, 'POST', dataBody)
     }
 
+    const saveComment = (dataBody, videoId) => {
+        return request(`${baseUrl}/v1/videos/${videoId}/comments`, 'POST', dataBody)
+    }
+
+    const editComment = (dataBody, videoId, commentId) => {
+        return request(`${baseUrl}/v1/videos/${videoId}/comments/${commentId}`, 'PUT', dataBody)
+    }
+
+    const deleteComment = (videoId, commentId) => {
+        return requestWithoutBody(`${baseUrl}/v1/videos/${videoId}/comments/${commentId}`, 'DELETE')
+    }
+
+    const retrieveComments = (videoId) => {
+        return requestWithoutBody(`${baseUrl}/v1/videos/${videoId}/comments`, 'GET')
+    }
+    
     const requestUser = (id) => {
         return request(`${baseUrl}/v1/users/${id}`, 'GET');
     }
@@ -117,21 +131,38 @@ const Api = function () {
         return requestWithoutBody(`${baseUrl}/v1/users/${userId}/subscribed`, 'GET')
     }
 
+    const subscribe = (channelId) => {
+        return requestWithoutBody(`${baseUrl}/v1/users/${channelId}/subscribe`, 'POST')
+    }
+
+    const cancelSubscribe = (channelId) => {
+        return requestWithoutBody(`${baseUrl}/v1/users/${channelId}/subscribe`, 'DELETE')
+    }
+
     return {
         requestVideos,
         requestVideo,
+        requestLike,
+        requestLikeCount,
+        requestDisLike,
         saveVideo,
         updateVideo,
         deleteVideo,
         postLogin,
         postLogout,
         signup,
+        saveComment,
+        editComment,
+        deleteComment,
+        retrieveComments,
         requestUser,
         updateUser,
         retrieveLoginInfo,
         deleteUser,
         requestMyChannelVideos,
-        requestSubscribed
+        requestSubscribed,
+        subscribe,
+        cancelSubscribe
     }
 }
 

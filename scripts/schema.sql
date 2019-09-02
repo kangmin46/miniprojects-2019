@@ -42,3 +42,14 @@ CREATE TABLE IF NOT EXISTS subscription(
 	FOREIGN KEY(subscribed_id) REFERENCES user(id),
 	FOREIGN KEY(subscriber_id) REFERENCES user(id)
 );
+
+CREATE TABLE IF NOT EXISTS video_like(
+	id BIGINT AUTO_INCREMENT,
+    create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+	update_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    like_user_id BIGINT NOT NULL,
+	video_id BIGINT NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(like_user_id) REFERENCES user(id),
+	FOREIGN KEY(video_id) REFERENCES video(id)
+);
