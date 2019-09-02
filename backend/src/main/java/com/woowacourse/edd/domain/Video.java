@@ -22,6 +22,11 @@ import java.util.Objects;
 @Entity
 @Where(clause = "is_deleted = 'false'")
 public class Video {
+    
+    public static final int TITLE_LENGTH_MAX = 80;
+    public static final int CONTENTS_LENGTH_MAX = 255;
+    public static final int YOUTUBEID_LENGTH_MAX = 255;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +35,7 @@ public class Video {
     @Column(nullable = false)
     private String youtubeId;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = TITLE_LENGTH_MAX)
     private String title;
 
     @Lob
