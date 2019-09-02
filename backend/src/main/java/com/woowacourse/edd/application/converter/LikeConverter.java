@@ -14,13 +14,11 @@ public class LikeConverter {
         return new Like(video ,user);
     }
 
-    public static LikeResponse toResponse(Like like) {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyyMMddHH");
-        String date = like.getCreateDate().format(format);
-        return new LikeResponse(like.getVideo().getId(), like.getLikeUser().getId(), date);
-    }
-
     public static LikeCountResponse toCountResponse(Long count) {
         return new LikeCountResponse(count);
+    }
+
+    public static LikeResponse toResponse(boolean isLike) {
+        return new LikeResponse(isLike);
     }
 }

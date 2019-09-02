@@ -2,9 +2,9 @@ package com.woowacourse.edd.application.service;
 
 import com.woowacourse.edd.application.converter.LikeConverter;
 import com.woowacourse.edd.application.response.LikeCountResponse;
+import com.woowacourse.edd.application.response.LikeResponse;
 import com.woowacourse.edd.domain.User;
 import com.woowacourse.edd.domain.Video;
-import com.woowacourse.edd.exceptions.DuplicateLikeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,14 +23,14 @@ public class LikeService {
         this.userInternalService = userInternalService;
     }
 
-    public void save(Long videoId, Long userId) {
+    public LikeResponse save(Long videoId, Long userId) {
         Video video = videoInternalService.findById(videoId);
         User user = userInternalService.findById(userId);
-        if(likeInternalService.isLikeExist(videoId, userId)) {
-            throw new DuplicateLikeException();
+        if(likeInternalService.isLikeDoesNotExist(videoId, userId)) {
+            likeInternalService.save(LikeConverter.toEntity(video,user));
+            return LikeConverter.toResponse(false);
         }
-
-        likeInternalService.save(LikeConverter.toEntity(video,user));
+        return LikeConverter.toResponse(true);
     }
 
     public LikeCountResponse retrieveCount(Long videoId) {

@@ -23,8 +23,8 @@ public class LikeInternalService {
     }
 
     @Transactional(readOnly = true)
-    public boolean isLikeExist(Long videoId, Long userId) {
-        return likeRepository.findByVideo_IdAndLikeUser_Id(videoId, userId).isPresent();
+    public boolean isLikeDoesNotExist(Long videoId, Long userId) {
+        return !likeRepository.findByVideo_IdAndLikeUser_Id(videoId, userId).isPresent();
     }
 
     public void delete(Long videoId, Long userId) {

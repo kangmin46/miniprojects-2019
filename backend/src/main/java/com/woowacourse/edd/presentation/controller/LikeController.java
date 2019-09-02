@@ -1,6 +1,7 @@
 package com.woowacourse.edd.presentation.controller;
 
 import com.woowacourse.edd.application.response.LikeCountResponse;
+import com.woowacourse.edd.application.response.LikeResponse;
 import com.woowacourse.edd.application.response.SessionUser;
 import com.woowacourse.edd.application.service.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,8 @@ public class LikeController {
     @PostMapping("/v1/videos/{videoId}/likes")
     public ResponseEntity save(@PathVariable Long videoId, HttpSession session) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("user");
-        likeService.save(videoId, sessionUser.getId());
-        return ResponseEntity.ok().build();
+        LikeResponse likeResponse = likeService.save(videoId, sessionUser.getId());
+        return ResponseEntity.ok().body(likeResponse);
     }
 
     @DeleteMapping("/v1/videos/{videoId}/likes")
