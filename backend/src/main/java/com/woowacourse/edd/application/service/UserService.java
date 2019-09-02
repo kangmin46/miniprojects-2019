@@ -49,7 +49,7 @@ public class UserService {
     }
 
     public List<VideoPreviewResponse> retrieveVideos(Long userId) {
-        return videoInternalService.findAllByUserId(userId).stream()
+        return videoInternalService.findByCreatorId(userId).stream()
             .map(VideoConverter::toPreviewResponse)
             .collect(Collectors.toList());
     }

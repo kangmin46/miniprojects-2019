@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_CONTENTS_MESSAGE;
 import static com.woowacourse.edd.exceptions.CommentNotFoundException.COMMENT_NOT_FOUND_MESSAGE;
 import static com.woowacourse.edd.exceptions.InvalidAccessException.INVALID_ACCESS_MESSAGE;
 import static com.woowacourse.edd.exceptions.InvalidContentsException.INVALID_CONTENTS_MESSAGE;
@@ -45,6 +46,18 @@ public class CommentControllerTests extends BasicControllerTests {
     void save_invalid_contents() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(" ");
         assertFailBadRequest(saveComment(DEFAULT_VIDEO_ID, commentRequestDto), INVALID_CONTENTS_MESSAGE);
+    }
+
+    @Test
+    void save_oversize_contents() {
+        String overSizeContents = "";
+
+        for (int i = 0; i < 256; i++) {
+            overSizeContents += "a";
+        }
+        CommentRequestDto commentRequestDto = new CommentRequestDto(overSizeContents);
+        assertFailBadRequest(saveComment(DEFAULT_VIDEO_ID, commentRequestDto), OVER_SIZE_CONTENTS_MESSAGE);
+
     }
 
     @Test
@@ -106,7 +119,7 @@ public class CommentControllerTests extends BasicControllerTests {
         String invalidEmail = "heebong@email.com";
         String invalidPW = "P@ssw0rd";
 
-        UserSaveRequestDto invalidUserSaveRequestDto = new UserSaveRequestDto("heebong", invalidEmail, invalidPW);
+        UserSaveRequestDto invalidUserSaveRequestDto = new UserSaveRequestDto("heebong", invalidEmail, invalidPW, invalidPW);
         LoginRequestDto invalidUserLoginRequestDto = new LoginRequestDto(invalidEmail, invalidPW);
         signUp(invalidUserSaveRequestDto);
         String cookie = getLoginCookie(invalidUserLoginRequestDto);
@@ -138,7 +151,7 @@ public class CommentControllerTests extends BasicControllerTests {
         CommentRequestDto updateCommentRequestDto = new CommentRequestDto(updateContents);
 
         assertFailNotFound(updateComment(DEFAULT_VIDEO_ID, commentId + 100L, updateCommentRequestDto, cookie)
-           , COMMENT_NOT_FOUND_MESSAGE);
+            , COMMENT_NOT_FOUND_MESSAGE);
     }
 
     @Test
@@ -191,7 +204,7 @@ public class CommentControllerTests extends BasicControllerTests {
 
     @Test
     void delete_invalid_userId() {
-        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("heebong", "heebong@naver.com", "P@ssW0rd");
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("heebong", "heebong@naver.com", "P@ssW0rd", "P@ssW0rd");
         signUp(userSaveRequestDto);
         String cookie = getLoginCookie(new LoginRequestDto("heebong@naver.com", "P@ssW0rd"));
 

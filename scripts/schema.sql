@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS video(
 	title VARCHAR(100) NOT NULL,
 	contents TEXT NOT NULL,
 	view_count INTEGER NOT NULL DEFAULT 0,
+	is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
 	creator_id BIGINT NOT NULL,
 	create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(id),
@@ -31,4 +32,13 @@ CREATE TABLE IF NOT EXISTS comment(
 	PRIMARY KEY(id),
 	FOREIGN KEY(author_id) REFERENCES user(id),
 	FOREIGN KEY(video_id) REFERENCES video(id)
+);
+
+CREATE TABLE IF NOT EXISTS subscription(
+	id BIGINT AUTO_INCREMENT,
+	subscribed_id BIGINT NOT NULL,
+	subscriber_id BIGINT NOT NULL,
+	PRIMARY KEY(id),
+	FOREIGN KEY(subscribed_id) REFERENCES user(id),
+	FOREIGN KEY(subscriber_id) REFERENCES user(id)
 );

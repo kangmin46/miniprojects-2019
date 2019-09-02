@@ -1,24 +1,29 @@
 package com.woowacourse.edd.presentation.controller;
 
+import com.woowacourse.edd.application.dto.LoginRequestDto;
+import com.woowacourse.edd.application.dto.UserSaveRequestDto;
 import com.woowacourse.edd.application.dto.VideoSaveRequestDto;
 import com.woowacourse.edd.application.dto.VideoUpdateRequestDto;
-import com.woowacourse.edd.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
-import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.stream.IntStream;
+
+import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_CONTENTS_MESSAGE;
+import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_TITLE_MESSAGE;
+import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_YOUTUBEID_MESSAGE;
+import static com.woowacourse.edd.exceptions.UnauthorizedAccessException.UNAUTHORIZED_ACCESS_MESSAGE;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
 
 public class VideoControllerTests extends BasicControllerTests {
 
     private final String VIDEOS_URI = "/v1/videos";
-    private final LocalDateTime DEFAULT_VIDEO_DATETIME = LocalDateTime.of(2019, 5, 5, 15, 31, 23);
     private final int DEFAULT_VIDEO_VIEW_COUNT = 100;
 
     @Test
@@ -31,7 +36,6 @@ public class VideoControllerTests extends BasicControllerTests {
             .jsonPath("$.title").isEqualTo(DEFAULT_VIDEO_TITLE)
             .jsonPath("$.contents").isEqualTo(DEFAULT_VIDEO_CONTENTS)
             .jsonPath("$.viewCount").isEqualTo(DEFAULT_VIDEO_VIEW_COUNT + 1)
-            .jsonPath("$.createDate").isEqualTo(Utils.getFormedDate(DEFAULT_VIDEO_DATETIME))
             .jsonPath("$.creator.id").isEqualTo(DEFAULT_VIDEO_ID)
             .jsonPath("$.creator.name").isEqualTo(DEFAULT_LOGIN_NAME);
     }
@@ -45,22 +49,50 @@ public class VideoControllerTests extends BasicControllerTests {
     void find_videos_by_date() {
         String jsessionid = getDefaultLoginSessionId();
 
-        saveNextVideo(new VideoSaveRequestDto("111", "title1", "contents1"), jsessionid)
-            .consumeWith(res -> saveNextVideo(new VideoSaveRequestDto("222", "title2", "contents2"), jsessionid))
-            .consumeWith(res -> saveNextVideo(new VideoSaveRequestDto("333", "title3", "contents3"), jsessionid))
-            .consumeWith(res -> saveNextVideo(new VideoSaveRequestDto("444", "title4", "contents4"), jsessionid))
-            .consumeWith(res -> saveNextVideo(new VideoSaveRequestDto("555", "title5", "contents5"), jsessionid))
-            .consumeWith(res -> saveNextVideo(new VideoSaveRequestDto("666", "title6", "contents6"), jsessionid));
+        saveVideo(new VideoSaveRequestDto("111", "title1", "contents1"), jsessionid);
+        saveVideo(new VideoSaveRequestDto("222", "title2", "contents2"), jsessionid);
+        saveVideo(new VideoSaveRequestDto("333", "title2", "contents3"), jsessionid);
+        saveVideo(new VideoSaveRequestDto("444", "title4", "contents4"), jsessionid);
+        saveVideo(new VideoSaveRequestDto("555", "title5", "contents5"), jsessionid);
+        saveVideo(new VideoSaveRequestDto("666", "title6", "contents6"), jsessionid);
 
-        findVideos(0, 6, "createDate", "DESC")
+        PageRequestContentDto response = findVideos(0, 6, "createDate", "DESC")
+            .expectStatus().isOk()
+            .expectBody(PageRequestContentDto.class).returnResult().getResponseBody();
+
+        IntStream.range(0, response.getContent().size() - 1)
+            .forEach(i -> {
+                assertThat(LocalDateTime.parse((String) response.getContent().get(i).get("createDate")))
+                    .isAfterOrEqualTo(LocalDateTime.parse((String) response.getContent().get(i + 1).get("createDate")));
+            });
+    }
+
+    @Test
+    void find_videos_by_creator() {
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("edan", "edan1000@gmail.com", "p@ssW0rd", "p@ssW0rd");
+        String url = signUp(userSaveRequestDto).getResponseHeaders()
+            .getLocation()
+            .toASCIIString();
+
+        LoginRequestDto loginRequestDto = new LoginRequestDto("edan1000@gmail.com", "p@ssW0rd");
+        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto("abc", "newtitle", "newContents");
+        VideoSaveRequestDto secondVideoSaveRequestDto = new VideoSaveRequestDto("def", "secondtitle", "secondcontents");
+
+        String cookie = getLoginCookie(loginRequestDto);
+        String[] urls = url.split("/");
+        Long userId = Long.valueOf(urls[urls.length - 1]);
+
+        saveVideo(videoSaveRequestDto, cookie);
+        saveVideo(secondVideoSaveRequestDto, cookie);
+
+        findVideo("/creators/" + userId)
             .expectStatus().isOk()
             .expectBody()
-            .jsonPath("$.content.length()").isEqualTo(6)
-            .jsonPath("$.content[0].youtubeId").isEqualTo("666")
-            .jsonPath("$.content[0].viewCount").isEqualTo(0)
-            .jsonPath("$.content[3].youtubeId").isEqualTo("333")
-            .jsonPath("$.content[5].youtubeId").isEqualTo("111")
-            .jsonPath("$.content[5].creator.id").isEqualTo(DEFAULT_LOGIN_ID);
+            .jsonPath("$.length()").isEqualTo(2)
+            .jsonPath("$[0].creator.id").isEqualTo(userId)
+            .jsonPath("$[1].creator.id").isEqualTo(userId)
+            .jsonPath("$[0].title").isEqualTo("newtitle")
+            .jsonPath("$[1].title").isEqualTo("secondtitle");
     }
 //
 //    @Test
@@ -89,18 +121,32 @@ public class VideoControllerTests extends BasicControllerTests {
             .jsonPath("$.youtubeId").isEqualTo(DEFAULT_VIDEO_YOUTUBEID)
             .jsonPath("$.title").isEqualTo(DEFAULT_VIDEO_TITLE)
             .jsonPath("$.contents").isEqualTo(DEFAULT_VIDEO_CONTENTS)
-            .jsonPath("$.createDate").isEqualTo(Utils.getFormedDate(LocalDateTime.now(ZoneId.of("UTC"))))
             .jsonPath("$.creator.id").isEqualTo(DEFAULT_LOGIN_ID)
             .jsonPath("$.creator.name").isEqualTo(DEFAULT_LOGIN_NAME);
     }
 
     @Test
-    void save_invalid_youtube_id() {
-        String youtubeId = null;
+    void save_oversize_youtubeId() {
+        String overSizeYoutubeId = getOverSizeString(256);
+        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(overSizeYoutubeId, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 
-        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(youtubeId, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
+        assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), OVER_SIZE_YOUTUBEID_MESSAGE);
+    }
 
-        assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), "유투브 아이디는 필수로 입력해야합니다.");
+    @Test
+    void save_oversize_title() {
+        String oversizeTitle = getOverSizeString(81);
+        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, oversizeTitle, DEFAULT_VIDEO_CONTENTS);
+
+        assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), OVER_SIZE_TITLE_MESSAGE);
+    }
+
+    @Test
+    void save_oversize_contents() {
+        String overSizeContents = getOverSizeString(256);
+        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, overSizeContents);
+
+        assertFailBadRequest(saveVideo(videoSaveRequestDto, getDefaultLoginSessionId()), OVER_SIZE_CONTENTS_MESSAGE);
     }
 
     @Test
@@ -160,6 +206,18 @@ public class VideoControllerTests extends BasicControllerTests {
     }
 
     @Test
+    void update_invalid_user() {
+        String updateInvalidEmail = "updateVideo@email.com";
+        String updateInvalidPW = "P@ssw0rd";
+
+        signUp(new UserSaveRequestDto("name", updateInvalidEmail, updateInvalidPW, updateInvalidPW));
+
+        VideoUpdateRequestDto videoUpdateRequestDto = new VideoUpdateRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
+
+        assertFailForbidden(updateVideo(DEFAULT_VIDEO_ID, videoUpdateRequestDto, getLoginCookie(new LoginRequestDto(updateInvalidEmail, updateInvalidPW))), UNAUTHORIZED_ACCESS_MESSAGE);
+    }
+
+    @Test
     void update_view_count() {
         String sid = getDefaultLoginSessionId();
         String location = saveVideo(new VideoSaveRequestDto("abcdefg", "videos", "good video"), sid)
@@ -198,6 +256,15 @@ public class VideoControllerTests extends BasicControllerTests {
     @Test
     void delete_invalid_id() {
         assertFailNotFound(deleteVideo(100L, getDefaultLoginSessionId()), "그런 비디오는 존재하지 않아!");
+    }
+
+    @Test
+    void delete_invalid_user() {
+        String deleteVideoEmail = "deleteVideo@email.com";
+        String deleteVideoPW = "P@ssw0rd";
+        signUp(new UserSaveRequestDto("name", deleteVideoEmail, deleteVideoPW, deleteVideoPW));
+
+        assertFailForbidden(deleteVideo(DEFAULT_VIDEO_ID, getLoginCookie(new LoginRequestDto(deleteVideoEmail, deleteVideoPW))), UNAUTHORIZED_ACCESS_MESSAGE);
     }
 
     private WebTestClient.ResponseSpec findVideo(String uri) {

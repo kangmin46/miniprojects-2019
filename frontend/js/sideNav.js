@@ -65,14 +65,15 @@ const addSideNavi = function (sideNaviElement) {
     api.retrieveLoginInfo()
     .then(response => {
         if (response.status !== 200) {
-            response.json().then(err => {
-                // console.log(err.message)
-            })
         } else {
             return response.json()
         }
     })
-    .then(response => addLoginArea(response))
+    .then(response => {
+        if (response) {
+            addLoginArea(response)
+        }
+    })
 }
 
 const addLoginArea = function(response) {
@@ -124,5 +125,3 @@ const sideNavToggle = function (event) {
     event.preventDefault()
     document.querySelector('.app').classList.toggle('is-collapsed')
 }
-
-document.querySelector('.side-nav-toggle').addEventListener('click', sideNavToggle)

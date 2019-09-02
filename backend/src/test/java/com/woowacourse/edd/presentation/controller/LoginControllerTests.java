@@ -4,7 +4,6 @@ import com.woowacourse.edd.application.dto.LoginRequestDto;
 import com.woowacourse.edd.application.dto.UserSaveRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static com.woowacourse.edd.exceptions.PasswordNotMatchException.PASSWORD_NOT_MATCH_MESSAGE;
@@ -38,7 +37,7 @@ public class LoginControllerTests extends BasicControllerTests {
         String testEmail = "edan@gmail.com";
         String testPassword = "p@ssW0rd";
 
-        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("edan", testEmail, testPassword);
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("edan", testEmail, testPassword, testPassword);
         String url = signUp(userSaveRequestDto).getResponseHeaders().getLocation().toASCIIString();
 
         String sid = getLoginCookie(new LoginRequestDto("edan@gmail.com", "p@ssW0rd"));
