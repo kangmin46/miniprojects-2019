@@ -22,7 +22,7 @@ import java.util.Objects;
 @Entity
 @Where(clause = "is_deleted = 'false'")
 public class Video {
-    
+
     public static final int TITLE_LENGTH_MAX = 80;
     public static final int CONTENTS_LENGTH_MAX = 255;
     public static final int YOUTUBEID_LENGTH_MAX = 255;

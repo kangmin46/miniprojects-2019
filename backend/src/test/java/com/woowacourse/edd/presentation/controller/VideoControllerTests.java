@@ -13,10 +13,10 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 
-import static com.woowacourse.edd.exceptions.UnauthorizedAccessException.UNAUTHORIZED_ACCESS_MESSAGE;
 import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_CONTENTS_MESSAGE;
 import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_TITLE_MESSAGE;
 import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_YOUTUBEID_MESSAGE;
+import static com.woowacourse.edd.exceptions.UnauthorizedAccessException.UNAUTHORIZED_ACCESS_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class VideoControllerTests extends BasicControllerTests {

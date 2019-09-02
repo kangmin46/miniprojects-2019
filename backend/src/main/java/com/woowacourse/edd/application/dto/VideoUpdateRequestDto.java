@@ -5,14 +5,17 @@ import javax.validation.constraints.Size;
 import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_CONTENTS_MESSAGE;
 import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_TITLE_MESSAGE;
 import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_YOUTUBEID_MESSAGE;
+import static com.woowacourse.edd.domain.Video.CONTENTS_LENGTH_MAX;
+import static com.woowacourse.edd.domain.Video.TITLE_LENGTH_MAX;
+import static com.woowacourse.edd.domain.Video.YOUTUBEID_LENGTH_MAX;
 
 public class VideoUpdateRequestDto {
 
-    @Size(max = 255, message = OVER_SIZE_YOUTUBEID_MESSAGE)
+    @Size(max = YOUTUBEID_LENGTH_MAX, message = OVER_SIZE_YOUTUBEID_MESSAGE)
     private String youtubeId;
-    @Size(max = 80, message = OVER_SIZE_TITLE_MESSAGE)
+    @Size(max = TITLE_LENGTH_MAX, message = OVER_SIZE_TITLE_MESSAGE)
     private String title;
-    @Size(max = 255, message =  OVER_SIZE_CONTENTS_MESSAGE)
+    @Size(max = CONTENTS_LENGTH_MAX, message = OVER_SIZE_CONTENTS_MESSAGE)
     private String contents;
 
     private VideoUpdateRequestDto() {

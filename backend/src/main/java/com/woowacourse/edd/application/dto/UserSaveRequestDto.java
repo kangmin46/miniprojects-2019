@@ -23,7 +23,7 @@ public class UserSaveRequestDto {
     private String name;
 
     @Email(message = INVALID_EMAIL_FORM_MESSAGE)
-    @Size(min = EMAIL_LENGTH_MIN,max = EMAIL_LENGTH_MAX, message = INVALID_EMAIL_SIZE_MESSAGE)
+    @Size(min = EMAIL_LENGTH_MIN, max = EMAIL_LENGTH_MAX, message = INVALID_EMAIL_SIZE_MESSAGE)
     private String email;
 
     @Pattern(regexp = USER_PASSWORD_PATTERN, message = INVALID_PASSWORD_MESSAGE)

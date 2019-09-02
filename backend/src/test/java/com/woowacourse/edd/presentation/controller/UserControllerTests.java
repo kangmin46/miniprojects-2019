@@ -18,9 +18,9 @@ import static com.woowacourse.edd.exceptions.DuplicateEmailSignUpException.DUPLI
 import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
 
 public class UserControllerTests extends BasicControllerTests {
+
     public static final String DEFAULT_USER_NAME = "robby";
     public static final String DEFAULT_USER_PASSWORD = "P@ssW0rd";
-    
 
     @Test
     void email_validation() {
@@ -58,8 +58,9 @@ public class UserControllerTests extends BasicControllerTests {
     }
 
     @Test
-    void user_save_invalidSize() {
-        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto(DEFAULT_USER_NAME, getOverSizeString(256), DEFAULT_USER_PASSWORD, DEFAULT_USER_PASSWORD);
+    void user_save_invalid_size() {
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto(DEFAULT_USER_NAME, "als5610@naver.com" + getOverSizeString(256), DEFAULT_USER_PASSWORD, DEFAULT_USER_PASSWORD);
+
         assertFailBadRequest(webTestClient.post()
             .uri(USER_URL)
             .body(Mono.just(userSaveRequestDto), UserSaveRequestDto.class)
@@ -67,14 +68,14 @@ public class UserControllerTests extends BasicControllerTests {
     }
 
     @Test
-    void user_update_invalidSize() {
+    void user_update_invalid_size() {
         UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto(DEFAULT_USER_NAME, "als5610@naver.com", DEFAULT_USER_PASSWORD, DEFAULT_USER_PASSWORD);
-        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto(DEFAULT_USER_NAME, getOverSizeString(256));
-        LoginRequestDto loginRequestDto = new LoginRequestDto("als5610@naver.com",DEFAULT_USER_PASSWORD);
+        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto(DEFAULT_USER_NAME, "als5610@naver.com" + getOverSizeString(256));
+        LoginRequestDto loginRequestDto = new LoginRequestDto("als5610@naver.com", DEFAULT_USER_PASSWORD);
 
         String redirectUrl = getUrl(signUp(userSaveRequestDto));
         String cookie = getLoginCookie(loginRequestDto);
-        assertFailBadRequest(updateUser(userUpdateRequestDto,redirectUrl,cookie), INVALID_EMAIL_SIZE_MESSAGE);;
+        assertFailBadRequest(updateUser(userUpdateRequestDto, redirectUrl, cookie), INVALID_EMAIL_SIZE_MESSAGE);
     }
 
     @Test

@@ -113,7 +113,7 @@ public class BasicControllerTests {
 
     protected String getOverSizeString(int overSizeCount) {
         StringBuilder sb = new StringBuilder(overSizeCount);
-        IntStream.range(0, 5).forEach(i -> sb.append("A"));
+        IntStream.range(0, overSizeCount).forEach(i -> sb.append("A"));
         return sb.toString();
     }
 }
