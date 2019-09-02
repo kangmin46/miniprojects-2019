@@ -10,7 +10,7 @@ import com.woowacourse.edd.domain.User;
 public class UserConverter {
 
     public static User toSaveEntity(UserSaveRequestDto userSaveRequestDto) {
-        return new User(XssPreventer.escape(userSaveRequestDto.getName()), XssPreventer.escape(userSaveRequestDto.getEmail()), XssPreventer.escape(userSaveRequestDto.getPassword()));
+        return new User(XssPreventer.escape(userSaveRequestDto.getName()), XssPreventer.escape(userSaveRequestDto.getEmail()), userSaveRequestDto.getPassword());
     }
 
     public static UserResponse toResponse(User user) {
