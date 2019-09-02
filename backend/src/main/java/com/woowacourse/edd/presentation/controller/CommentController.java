@@ -36,7 +36,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity save(@PathVariable Long videoId, @Valid @RequestBody CommentRequestDto commentRequestDto, HttpSession session) {
+    public ResponseEntity save(@PathVariable Long videoId, @RequestBody @Valid CommentRequestDto commentRequestDto, HttpSession session) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("user");
         CommentResponse commentResponse = commentService.save(videoId, sessionUser.getId(), commentRequestDto);
         return ResponseEntity.created(URI.create(VIDEO_URL + "/" + videoId + "/comments/" + commentResponse.getId())).body(commentResponse);
@@ -50,7 +50,7 @@ public class CommentController {
 
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentResponse> update(@PathVariable Long videoId, @PathVariable Long commentId,
-                                                  @Valid @RequestBody CommentRequestDto commentRequestDto, HttpSession session) {
+                                                  @RequestBody @Valid CommentRequestDto commentRequestDto, HttpSession session) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("user");
         CommentResponse commentResponse = commentService.update(commentId, sessionUser.getId(), videoId, commentRequestDto);
         return ResponseEntity.ok(commentResponse);

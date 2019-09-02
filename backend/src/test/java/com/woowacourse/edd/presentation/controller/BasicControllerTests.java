@@ -9,6 +9,8 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.util.stream.IntStream;
+
 import static com.woowacourse.edd.presentation.controller.LoginController.LOGIN_URL;
 import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
 
@@ -110,13 +112,8 @@ public class BasicControllerTests {
     }
 
     protected String getOverSizeString(int overSizeCount) {
-        String overSizeContents = "";
-
-        for (int i = 0; i < overSizeCount; i++) {
-            overSizeContents += "a";
-        }
-        return overSizeContents;
+        StringBuilder sb = new StringBuilder(overSizeCount);
+        IntStream.range(0, 5).forEach(i -> sb.append("A"));
+        return sb.toString();
     }
-
-
 }
