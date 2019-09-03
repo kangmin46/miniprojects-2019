@@ -1,30 +1,23 @@
 package com.woowacourse.edd.application.service;
 
 import com.woowacourse.edd.application.converter.UserConverter;
-import com.woowacourse.edd.application.converter.VideoConverter;
 import com.woowacourse.edd.application.dto.UserSaveRequestDto;
 import com.woowacourse.edd.application.dto.UserUpdateRequestDto;
 import com.woowacourse.edd.application.response.UserResponse;
-import com.woowacourse.edd.application.response.VideoPreviewResponse;
 import com.woowacourse.edd.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class UserService {
 
     private final UserInternalService userInternalService;
-    private final VideoInternalService videoInternalService;
 
     @Autowired
-    public UserService(UserInternalService userInternalService, VideoInternalService videoInternalService) {
+    public UserService(UserInternalService userInternalService) {
         this.userInternalService = userInternalService;
-        this.videoInternalService = videoInternalService;
     }
 
     public Long save(UserSaveRequestDto userSaveRequestDto) {

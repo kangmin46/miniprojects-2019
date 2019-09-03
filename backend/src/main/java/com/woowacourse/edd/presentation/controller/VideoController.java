@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 import static com.woowacourse.edd.presentation.controller.VideoController.VIDEO_URL;
 

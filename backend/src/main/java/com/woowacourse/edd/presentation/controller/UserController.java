@@ -4,7 +4,6 @@ import com.woowacourse.edd.application.dto.UserSaveRequestDto;
 import com.woowacourse.edd.application.dto.UserUpdateRequestDto;
 import com.woowacourse.edd.application.response.SessionUser;
 import com.woowacourse.edd.application.response.UserResponse;
-import com.woowacourse.edd.application.response.VideoPreviewResponse;
 import com.woowacourse.edd.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
 
