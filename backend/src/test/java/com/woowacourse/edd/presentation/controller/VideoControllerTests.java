@@ -66,34 +66,6 @@ public class VideoControllerTests extends BasicControllerTests {
     }
 
     @Test
-    void find_videos_by_creator() {
-        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("edan", "edan1000@gmail.com", "p@ssW0rd", "p@ssW0rd");
-        String url = signUp(userSaveRequestDto).getResponseHeaders()
-            .getLocation()
-            .toASCIIString();
-
-        LoginRequestDto loginRequestDto = new LoginRequestDto("edan1000@gmail.com", "p@ssW0rd");
-        VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto("abc", "newtitle", "newContents");
-        VideoSaveRequestDto secondVideoSaveRequestDto = new VideoSaveRequestDto("def", "secondtitle", "secondcontents");
-
-        String cookie = getLoginCookie(loginRequestDto);
-        String[] urls = url.split("/");
-        Long userId = Long.valueOf(urls[urls.length - 1]);
-
-        saveVideo(videoSaveRequestDto, cookie);
-        saveVideo(secondVideoSaveRequestDto, cookie);
-
-        findVideo("/creators/" + userId)
-            .expectStatus().isOk()
-            .expectBody()
-            .jsonPath("$.length()").isEqualTo(2)
-            .jsonPath("$[0].creator.id").isEqualTo(userId)
-            .jsonPath("$[1].creator.id").isEqualTo(userId)
-            .jsonPath("$[0].title").isEqualTo("newtitle")
-            .jsonPath("$[1].title").isEqualTo("secondtitle");
-    }
-
-    @Test
     void save() {
         VideoSaveRequestDto videoSaveRequestDto = new VideoSaveRequestDto(DEFAULT_VIDEO_YOUTUBEID, DEFAULT_VIDEO_TITLE, DEFAULT_VIDEO_CONTENTS);
 

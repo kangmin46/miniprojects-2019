@@ -45,11 +45,5 @@ public class UserService {
     public void delete(Long id, Long loggedInId) {
         userInternalService.delete(id, loggedInId);
     }
-
-    public List<VideoPreviewResponse> retrieveVideos(Long userId) {
-        return videoInternalService.findByCreatorId(userId).stream()
-            .map(VideoConverter::toPreviewResponse)
-            .collect(Collectors.toList());
-    }
 }
 

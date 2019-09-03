@@ -58,10 +58,4 @@ public class VideoService {
     public void delete(Long id, Long logindedUserId) {
         videoInternalService.delete(id, logindedUserId);
     }
-
-    public List<VideoPreviewResponse> findByCreatorId(Long creatorId) {
-        return videoInternalService.findByCreatorId(creatorId).stream()
-            .map(VideoConverter::toPreviewResponse)
-            .collect(Collectors.toList());
-    }
 }

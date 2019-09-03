@@ -42,11 +42,6 @@ public class UserController {
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    @GetMapping("/{id}/videos")
-    public ResponseEntity<List<VideoPreviewResponse>> retrieveVideos(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.retrieveVideos(id));
-    }
-
     @PostMapping
     public ResponseEntity saveUser(@Valid @RequestBody UserSaveRequestDto userSaveRequestDto) {
         return ResponseEntity.created(URI.create(USER_URL + "/" + userService.save(userSaveRequestDto))).build();

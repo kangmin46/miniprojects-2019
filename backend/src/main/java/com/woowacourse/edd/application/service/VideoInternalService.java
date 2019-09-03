@@ -52,8 +52,4 @@ class VideoInternalService {
         Video video = findById(id);
         video.delete(loginedUserId);
     }
-
-    public List<Video> findByCreatorId(Long creatorId) {
-        return videoRepository.findAllByCreator_Id(creatorId);
-    }
 }

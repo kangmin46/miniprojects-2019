@@ -51,11 +51,6 @@ public class VideoController {
         return ResponseEntity.ok(videoService.findByPageRequest(pageable));
     }
 
-    @GetMapping("creators/{creatorId}")
-    public ResponseEntity<List<VideoPreviewResponse>> findVideosByCreator(@PathVariable Long creatorId) {
-        return ResponseEntity.ok(videoService.findByCreatorId(creatorId));
-    }
-
     @PostMapping
     public ResponseEntity<VideoResponse> saveVideo(@Valid @RequestBody VideoSaveRequestDto requestDto, HttpSession session) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("user");
