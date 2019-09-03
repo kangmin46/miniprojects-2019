@@ -23,7 +23,7 @@ public class LikeControllerTests extends BasicControllerTests {
 
     @Test
     void save() {
-        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("newUser", "newUser@naver.com", "p@ssW0rd","p@ssW0rd");
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("newUser", "newUser@naver.com", "p@ssW0rd", "p@ssW0rd");
         signUp(userSaveRequestDto);
         LoginRequestDto loginRequestDto = new LoginRequestDto("newUser@naver.com", "p@ssW0rd");
         String cookie = getLoginCookie(loginRequestDto);
@@ -55,7 +55,7 @@ public class LikeControllerTests extends BasicControllerTests {
     @Test
     @DisplayName("좋아요를 누르지 않은 상태에서 좋아요 취소 요청을 할 경우")
     void invaid_delete() {
-        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("newUser", "newUser2@naver.com", "p@ssW0rd","p@ssW0rd");
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("newUser", "newUser2@naver.com", "p@ssW0rd", "p@ssW0rd");
         signUp(userSaveRequestDto);
         LoginRequestDto loginRequestDto = new LoginRequestDto("newUser2@naver.com", "p@ssW0rd");
         String cookie = getLoginCookie(loginRequestDto);
@@ -116,7 +116,7 @@ public class LikeControllerTests extends BasicControllerTests {
 
 
     private WebTestClient.ResponseSpec deleteLike(Long userId, String cookie) {
-        return executeDelete("v1/videos/"+ userId+ "/likes")
+        return executeDelete("v1/videos/" + userId + "/likes")
             .cookie(COOKIE_JSESSIONID, cookie)
             .exchange();
     }

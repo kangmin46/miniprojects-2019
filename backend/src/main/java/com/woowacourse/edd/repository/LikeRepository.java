@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
     Optional<Like> findByVideo_IdAndLikeUser_Id(Long videoId, Long userId);
+
     Long countByVideo_Id(Long videoId);
 }

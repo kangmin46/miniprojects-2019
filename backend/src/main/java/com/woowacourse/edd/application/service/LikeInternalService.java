@@ -1,7 +1,6 @@
 package com.woowacourse.edd.application.service;
 
 import com.woowacourse.edd.domain.Like;
-import com.woowacourse.edd.domain.Video;
 import com.woowacourse.edd.exceptions.LikeNotFoundException;
 import com.woowacourse.edd.repository.LikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;

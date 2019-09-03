@@ -6,12 +6,10 @@ import com.woowacourse.edd.domain.Like;
 import com.woowacourse.edd.domain.User;
 import com.woowacourse.edd.domain.Video;
 
-import java.time.format.DateTimeFormatter;
-
 public class LikeConverter {
 
     public static Like toEntity(Video video, User user) {
-        return new Like(video ,user);
+        return new Like(video, user);
     }
 
     public static LikeCountResponse toCountResponse(Long count) {

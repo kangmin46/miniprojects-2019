@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import java.net.URI;
 
 import static com.woowacourse.edd.presentation.controller.LikeController.LIKE_URL;
 

@@ -7,12 +7,10 @@ import com.woowacourse.edd.application.dto.UserUpdateRequestDto;
 import com.woowacourse.edd.application.response.UserResponse;
 import com.woowacourse.edd.application.response.VideoPreviewResponse;
 import com.woowacourse.edd.domain.User;
-import com.woowacourse.edd.domain.Video;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

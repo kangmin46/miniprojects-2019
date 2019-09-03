@@ -19,8 +19,6 @@ import static com.woowacourse.edd.application.dto.VideoSaveRequestDto.OVER_SIZE_
 import static com.woowacourse.edd.exceptions.UnauthorizedAccessException.UNAUTHORIZED_ACCESS_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import static com.woowacourse.edd.presentation.controller.UserController.USER_URL;
-
 public class VideoControllerTests extends BasicControllerTests {
 
     private final String VIDEOS_URI = "/v1/videos";

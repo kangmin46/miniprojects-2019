@@ -26,8 +26,8 @@ public class LikeService {
     public LikeResponse save(Long videoId, Long userId) {
         Video video = videoInternalService.findById(videoId);
         User user = userInternalService.findById(userId);
-        if(likeInternalService.isLikeDoesNotExist(videoId, userId)) {
-            likeInternalService.save(LikeConverter.toEntity(video,user));
+        if (likeInternalService.isLikeDoesNotExist(videoId, userId)) {
+            likeInternalService.save(LikeConverter.toEntity(video, user));
             return LikeConverter.toResponse(false);
         }
         return LikeConverter.toResponse(true);
@@ -40,6 +40,6 @@ public class LikeService {
     }
 
     public void delete(Long videoId, Long userId) {
-        likeInternalService.delete(videoId,userId);
+        likeInternalService.delete(videoId, userId);
     }
 }
