@@ -31,21 +31,21 @@ public class LikeController {
         this.likeService = likeService;
     }
 
-    @PostMapping(LIKE_URL)
+    @PostMapping
     public ResponseEntity save(@PathVariable Long videoId, HttpSession session) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("user");
         LikeResponse likeResponse = likeService.save(videoId, sessionUser.getId());
         return ResponseEntity.ok().body(likeResponse);
     }
 
-    @DeleteMapping(LIKE_URL)
+    @DeleteMapping
     public ResponseEntity delete(@PathVariable Long videoId, HttpSession session) {
         SessionUser sessionUser = (SessionUser) session.getAttribute("user");
         likeService.delete(videoId, sessionUser.getId());
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(LIKE_URL)
+    @GetMapping
     public ResponseEntity countLikes(@PathVariable Long videoId) {
         LikeCountResponse likeCountResponse = likeService.retrieveCount(videoId);
         return ResponseEntity.ok(likeCountResponse);

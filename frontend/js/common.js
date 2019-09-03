@@ -22,7 +22,7 @@ const wootubeCtx = {
         }
     },
     constants: {
-        videoPageSize: 6,
+        videoPageSize: 12,
         videoChannelPageSize: 18
     }
 }
@@ -52,7 +52,6 @@ const Api = function () {
         })
     }
 
-<<<<<<< HEAD
     const requestLike = (userId) => {
         return requestWithoutBody(`${baseUrl}/v1/videos/${userId}/likes`, 'POST')
     }
@@ -65,8 +64,6 @@ const Api = function () {
         return requestWithoutBody(`${baseUrl}/v1/videos/${userId}/likes`, 'DELETE')
     }
     
-=======
->>>>>>> 870d0d6c2f64cba0ff555a3e4092740db34c3c92
     const requestVideos = (page, size, sort) => {
         return requestWithoutBody(`${baseUrl}/v1/videos?page=${page}&size=${size}&sort=${sort},DESC`, 'GET')
     }
