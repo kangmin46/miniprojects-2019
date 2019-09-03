@@ -5,7 +5,7 @@ const wootubeCtx = {
         getUrlParams: function (name, url) {
             if (!url) url = window.location.href;
             name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
                 results = regex.exec(url);
             if (!results) return null;
             if (!results[2]) return '';
@@ -14,11 +14,16 @@ const wootubeCtx = {
         calculateDate: function (responseDate) {
             const localResponseDate = moment.utc(responseDate).local()
             return localResponseDate.fromNow();
+        },
+        unescapeHtml: (escaped) => {
+            const elm = document.createElement('div')
+            elm.innerHTML = escaped
+            return elm.childNodes.length == 0 ? '' : elm.childNodes[0].nodeValue
         }
     },
-    constants : {
-        videoPageSize : 6,
-        videoChannelPageSize : 18
+    constants: {
+        videoPageSize: 6,
+        videoChannelPageSize: 18
     }
 }
 
@@ -47,6 +52,7 @@ const Api = function () {
         })
     }
 
+<<<<<<< HEAD
     const requestLike = (userId) => {
         return requestWithoutBody(`${baseUrl}/v1/videos/${userId}/likes`, 'POST')
     }
@@ -59,16 +65,18 @@ const Api = function () {
         return requestWithoutBody(`${baseUrl}/v1/videos/${userId}/likes`, 'DELETE')
     }
     
+=======
+>>>>>>> 870d0d6c2f64cba0ff555a3e4092740db34c3c92
     const requestVideos = (page, size, sort) => {
-        return requestWithoutBody(`${baseUrl}/v1/videos?page=${page}&size=${size}&sort=${sort},DESC`,'GET')
+        return requestWithoutBody(`${baseUrl}/v1/videos?page=${page}&size=${size}&sort=${sort},DESC`, 'GET')
     }
 
     const requestMyChannelVideos = (userId) => {
-        return requestWithoutBody(`${baseUrl}/v1/videos/creators/${userId}`,'GET')
+        return requestWithoutBody(`${baseUrl}/v1/videos/creators/${userId}`, 'GET')
     }
 
     const requestVideo = (videoId) => {
-        return requestWithoutBody(`${baseUrl}/v1/videos/${videoId}`,'GET')
+        return requestWithoutBody(`${baseUrl}/v1/videos/${videoId}`, 'GET')
     }
 
     const saveVideo = (dataBody) => {
@@ -110,7 +118,7 @@ const Api = function () {
     const retrieveComments = (videoId) => {
         return requestWithoutBody(`${baseUrl}/v1/videos/${videoId}/comments`, 'GET')
     }
-    
+
     const requestUser = (id) => {
         return request(`${baseUrl}/v1/users/${id}`, 'GET');
     }
