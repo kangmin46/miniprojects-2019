@@ -25,8 +25,10 @@ public class BasicControllerTests {
     protected static final String COOKIE_JSESSIONID = "JSESSIONID";
     protected static final String DEFAULT_VIDEO_YOUTUBEID = "S8e1geEpnTA";
     protected static final Long DEFAULT_VIDEO_ID = 1L;
+
     protected final String DEFAULT_VIDEO_TITLE = "제목";
     protected final String DEFAULT_VIDEO_CONTENTS = "내용";
+
     @Autowired
     protected WebTestClient webTestClient;
 

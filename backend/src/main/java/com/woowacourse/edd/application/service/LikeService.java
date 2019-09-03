@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class LikeService {
+
     private final LikeInternalService likeInternalService;
     private final VideoInternalService videoInternalService;
     private final UserInternalService userInternalService;

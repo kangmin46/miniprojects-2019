@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class LikeInternalService {
+
     private final LikeRepository likeRepository;
 
     @Autowired
@@ -36,6 +37,7 @@ public class LikeInternalService {
         return likeRepository.findByVideo_IdAndLikeUser_Id(videoId, userId).orElseThrow(LikeNotFoundException::new);
     }
 
+    @Transactional(readOnly = true)
     public Long retrieve(Long videoId) {
         return likeRepository.countByVideo_Id(videoId);
     }

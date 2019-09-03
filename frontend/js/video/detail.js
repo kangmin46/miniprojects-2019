@@ -94,7 +94,3 @@ const printLikeCount = function () {
         likeCountTag.innerHTML = json.count
     })
 }
-
-
-
-

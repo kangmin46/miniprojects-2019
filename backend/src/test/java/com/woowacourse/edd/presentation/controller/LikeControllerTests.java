@@ -13,6 +13,7 @@ import static com.woowacourse.edd.exceptions.LikeNotFoundException.LIKE_NOT_FOUN
 import static com.woowacourse.edd.presentation.controller.VideoController.VIDEO_URL;
 
 public class LikeControllerTests extends BasicControllerTests {
+
     private String cookie;
 
     @BeforeEach
@@ -34,8 +35,7 @@ public class LikeControllerTests extends BasicControllerTests {
             .cookie(COOKIE_JSESSIONID, cookie)
             .body(Mono.just(videoSaveRequestDto), VideoSaveRequestDto.class)
             .exchange()
-            .expectStatus()
-            .isCreated()
+            .expectStatus().isCreated()
             .expectBody()
             .returnResult()
             .getResponseHeaders()
@@ -46,8 +46,7 @@ public class LikeControllerTests extends BasicControllerTests {
         Long userId = Long.valueOf(urls[urls.length - 1]);
 
         saveLike(userId)
-            .expectStatus()
-            .isOk()
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$.like").isEqualTo(false);
     }
@@ -66,8 +65,7 @@ public class LikeControllerTests extends BasicControllerTests {
             .cookie(COOKIE_JSESSIONID, cookie)
             .body(Mono.just(videoSaveRequestDto), VideoSaveRequestDto.class)
             .exchange()
-            .expectStatus()
-            .isCreated()
+            .expectStatus().isCreated()
             .expectBody()
             .returnResult()
             .getResponseHeaders()
@@ -83,8 +81,7 @@ public class LikeControllerTests extends BasicControllerTests {
     @Test
     void duplicate_like() {
         saveLike(1L)
-            .expectStatus()
-            .isOk()
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$.like").isEqualTo(true);
     }
@@ -93,8 +90,7 @@ public class LikeControllerTests extends BasicControllerTests {
     void read() {
         executeGet("v1/videos/1/likes")
             .exchange()
-            .expectStatus()
-            .isOk()
+            .expectStatus().isOk()
             .expectBody()
             .jsonPath("$.count").isEqualTo(1L);
     }
@@ -104,8 +100,7 @@ public class LikeControllerTests extends BasicControllerTests {
         LoginRequestDto loginRequestDto = new LoginRequestDto(DEFAULT_LOGIN_EMAIL, DEFAULT_LOGIN_PASSWORD);
         String cookie = getLoginCookie(loginRequestDto);
         deleteLike(1L, cookie)
-            .expectStatus()
-            .isOk();
+            .expectStatus().isOk();
     }
 
     private WebTestClient.ResponseSpec saveLike(Long userId) {
@@ -113,7 +108,6 @@ public class LikeControllerTests extends BasicControllerTests {
             .cookie(COOKIE_JSESSIONID, cookie)
             .exchange();
     }
-
 
     private WebTestClient.ResponseSpec deleteLike(Long userId, String cookie) {
         return executeDelete("v1/videos/" + userId + "/likes")

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class SubscriptionService {
+
     private final SubscriptionInternalService subscriptionInternalService;
 
     @Autowired

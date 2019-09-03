@@ -92,21 +92,6 @@ public class VideoControllerTests extends BasicControllerTests {
             .jsonPath("$[0].title").isEqualTo("newtitle")
             .jsonPath("$[1].title").isEqualTo("secondtitle");
     }
-//
-//    @Test
-//    void find_videos_by_user() {
-//        executeGet("/videos/users/1")
-//            .exchange()
-//            .expectStatus()
-//            .isOk()
-//            .expectBody()
-//            .jsonPath("$[0].id").isNotEmpty()
-//            .jsonPath("$[0].youtubeId").isEqualTo(DEFAULT_VIDEO_YOUTUBEID)
-//            .jsonPath("$[0].title").isEqualTo(DEFAULT_VIDEO_TITLE)
-//            .jsonPath("$[0].createDate").isNotEmpty()
-//            .jsonPath("$[0].creator.id").isNotEmpty()
-//            .jsonPath("$[0].creator.name").isEqualTo(DEFAULT_LOGIN_NAME);
-//    }
 
     @Test
     void save() {
