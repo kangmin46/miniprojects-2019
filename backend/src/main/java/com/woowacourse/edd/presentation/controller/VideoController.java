@@ -33,6 +33,7 @@ import static com.woowacourse.edd.presentation.controller.VideoController.VIDEO_
 public class VideoController {
 
     static final String VIDEO_URL = "/v1/videos";
+
     private final VideoService videoService;
 
     @Autowired

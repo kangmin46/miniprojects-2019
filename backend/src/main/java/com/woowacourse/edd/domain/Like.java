@@ -28,7 +28,7 @@ public class Like {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Video video;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "like_user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User likeUser;
@@ -68,5 +68,4 @@ public class Like {
     public LocalDateTime getUpdateDate() {
         return updateDate;
     }
-
 }
